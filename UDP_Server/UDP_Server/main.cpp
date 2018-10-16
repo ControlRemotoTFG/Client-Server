@@ -95,8 +95,11 @@ void main()
 		// Convert from byte array to chars
 		inet_ntop(AF_INET, &client.sin_addr, clientIp, 256);
 
+		int x, y;
+		x = buf[0];
+		y = buf[1];
 		// Display the message / who sent it
-		cout << "Message recv from " << clientIp << " : " << buf << endl;
+		cout << "Message recv from " << clientIp << " : La x es: " << x  << " y la y es: " <<y << endl;
 	}
 
 	// Close socket
