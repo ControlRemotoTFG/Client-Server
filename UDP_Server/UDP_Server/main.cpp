@@ -1,12 +1,3 @@
-/**********************************************************************
-	Name		: Example UDP Server
-	Author		: Sloan Kelly
-	Date		: 2017-12-16
-	Purpose		: Example of a bare bones UDP server
-
-***********************************************************************/
-
-
 // Link de youtube https://www.youtube.com/watch?v=uIanSvWou1M
 
 
@@ -95,6 +86,7 @@ void main()
 		// Convert from byte array to chars
 		inet_ntop(AF_INET, &client.sin_addr, clientIp, 256);
 
+		//Both coordenates x,y to unserialize.
 		int x, y;
 		x = buf[0];
 		y = buf[1];

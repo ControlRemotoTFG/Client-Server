@@ -1,0 +1,6 @@
+Proyecto realizado por Pablo Gómez Calvo y Sergio Juan Higuera Velasco.
+
+Implementacion de un Cliente en Java que manda 2 ints serializados.
+Estos ints se mandan a un Servidor C++ que los recibe y los muestra por pantalla.
+
+Nota: Los enteros deben ser menores que 2^8, esta parte está pendiente de arreglarse para que sean los 32 bits que ocupan los enteros.

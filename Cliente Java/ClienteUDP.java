@@ -31,6 +31,7 @@ public class ClienteUDP {
       //byte[] mensaje = args[0].getBytes();
       InetAddress hostServidor = InetAddress.getByName(args[0]);
       int puertoServidor = 6789;
+      //actualmente si X o Y son mayores que 2^8, ocuparian mas de 1Byte y no se pasarían bien por lo que eso tenemos que arreglarlo.
       PuntoXY punto = new PuntoXY(10,20);
       int i=0;
       // Construimos un datagrama para enviar el mensaje al servidor
