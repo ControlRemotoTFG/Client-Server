@@ -22,7 +22,7 @@
     <ProjectGuid>{945B6A9F-969D-480F-A4E0-BAD736AF3667}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UDP_Server</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
