@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import static java.lang.System.out;
 public class UdpClientThread extends Thread{
 
+    //x, y: ints to send to server.
     int _x;
     int _y;
 
@@ -56,7 +57,8 @@ public class UdpClientThread extends Thread{
 
             // send request
             byte[] buf = new byte[256];
-            out.println(_x);
+
+            //coding 2 ints in big endian
             buf [0] = (byte)((_x >> 24) & 0xff);
             buf [1] = (byte)((_x >> 16) & 0xff);
             buf [2] = (byte)((_x >> 8) & 0xff);
@@ -73,6 +75,8 @@ public class UdpClientThread extends Thread{
             socket.send(packet);
 
             sendState("connected");
+
+            //client wait to response for the message
 
             /*// get response
             packet = new DatagramPacket(buf, buf.length);
