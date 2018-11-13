@@ -60,11 +60,8 @@ static void server_thread() {
 	serverHint.sin_port = htons(numPort); // Convert from little to big endian
 
 	// Try and bind the socket to the IP and port
-	if(bind(in, (sockaddr*)&serverHint, sizeof(serverHint)) < 0)
-	{
-		cerr << "Cannot bind" << endl;
-		return;
-	}
+	bind(in, (sockaddr*)&serverHint, sizeof(serverHint));
+	
 	
 	mtx.lock();
 	std::cout << "Connect to port number: " << numPort << '\n';
