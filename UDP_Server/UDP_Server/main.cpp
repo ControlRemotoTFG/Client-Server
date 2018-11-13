@@ -3,7 +3,7 @@
 #pragma warning(disable:4996)
 #include <iostream>
 #include <WS2tcpip.h>
-
+#include <SDL.h>
 
 // Include the Winsock library (lib) file
 #pragma comment (lib, "ws2_32.lib")
@@ -156,6 +156,28 @@ void main()
 
 
 	//Init SDL
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		printf("ERROR: No se pudo inicializar SDL, Error SDL: %s\n", SDL_GetError());
+	}
+
+	SDL_Window* ventana = NULL;
+	SDL_Renderer*  renderer = NULL;
+
+	ventana = SDL_CreateWindow("Tutorial SDL 2", 50, 50, 640, 480, SDL_WINDOW_SHOWN);
+	if (ventana == NULL) {
+		printf("ERROR: No se pudo crear la ventana, SDL_Error: %s\n", SDL_GetError());
+	}
+	else {
+		//Se crea la superficie para la ventana principal
+		renderer = SDL_CreateRenderer(ventana, -1, SDL_RENDERER_PRESENTVSYNC);
+
+		//Ponemos color al fondo de la ventana
+
+		SDL_Color colorWin = { 0, 0, 0, 255 };
+		SDL_SetRenderDrawColor(renderer, colorWin.r, colorWin.g, colorWin.b, colorWin.a);
+		SDL_RenderClear(renderer);
+		SDL_RenderPresent(renderer);
+	}
 
 	
 	//actualizar la posicion del cuadrado.
@@ -165,4 +187,5 @@ void main()
 	//Release SDL
 	
 	std::cout << "Server terminado." << std::endl;
+	SDL_Quit();
 }
