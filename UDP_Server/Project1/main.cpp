@@ -5,6 +5,7 @@
 #include <WS2tcpip.h>
 #include <SDL.h>
 
+
 // Include the Winsock library (lib) file
 #pragma comment (lib, "ws2_32.lib")
 
@@ -15,7 +16,10 @@
 #include <mutex>          // std::mutex
 
 static std::mutex mtx;
+static std::mutex xy;
 SOCKET in;
+int x ;
+int y ;
 
 void server_thread() {
 
@@ -32,7 +36,7 @@ void server_thread() {
 	while (true)
 	{
 		mtx.lock();
-		//std::cout << "Waiting..." << std::endl;
+		std::cout << "Waiting..." << std::endl;
 		mtx.unlock();
 		ZeroMemory(&client, clientLength); // Clear the client structure
 		ZeroMemory(buf, 1024); // Clear the receive buffer
@@ -56,20 +60,22 @@ void server_thread() {
 		// Convert from byte array to chars
 		inet_ntop(AF_INET, &client.sin_addr, clientIp, 256);
 
+
+		xy.lock();
 		//Big-Endian decodification for 2 ints
-		int x = 0;
+		
 		x = 0xFF & buf[3];
 		x |= (0xFF & buf[2]) << 8;
 		x |= (0xFF & buf[1]) << 16;
 		x |= (0xFF & buf[0]) << 24;
 
-		int y = 0;
+		
 		y = 0xFF & buf[7];
 		y |= (0xFF & buf[6]) << 8;
 		y |= (0xFF & buf[5]) << 16;
 		y |= (0xFF & buf[4]) << 24;
 
-
+		xy.unlock();
 		// Display the message / who sent it
 		mtx.lock();
 		std::cout << "Message recv from " << clientIp << " : X: " << x <<
@@ -87,7 +93,7 @@ void server_thread() {
 	std::cout << "Servidor finalizado" << std::endl;
 	mtx.unlock();
 }
-void main()
+int main(int argc, char *argv[])
 {
 	mtx.lock();
 	std::cout << "Main empieza." << std::endl;
@@ -120,7 +126,7 @@ void main()
 	{
 		// Not ok! Get out quickly
 		std::cout << "Can't start Winsock! " << wsOk;
-		return;
+		return 0;
 	}
 
 	////////////////////////////////////////////////////////////
@@ -179,13 +185,88 @@ void main()
 		SDL_RenderPresent(renderer);
 	}
 
-	
+
+
+	//--------------------------------CREO CUADRADO--------------------------------------
+
+	struct Cuadrado {
+		int x;
+		int y;
+		int ancho;
+		int alto;
+	};
+	Cuadrado punto;
+	int velx;
+	int vely;
+	int color;
+	xy.lock();
+	x = 5;
+	y = 5;
+	xy.unlock();
+	punto.ancho = 50;
+	punto.alto = 50;
+
+	velx = 1;
+	vely = 1;
+	color = 16777215;
+
+	//--------------------------------------BUCLE JUEGO--------------------------------
+
+
+	int i = 0;
+	while (i < 500000000000000) {
+		
+		x += velx;
+		y += vely;
+		
+		if (x + punto.ancho > 640) {
+			velx *= -1;
+			x =640 - punto.ancho;
+		}
+		else if (x < 0) {
+			velx *= -1;
+			x = 0;
+		}
+
+		if (y + punto.alto >480) {
+			vely *= -1;
+			y =480 - punto.alto;
+		}
+		else if (y < 0) {
+			y = 0;
+			vely *= -1;
+		}
+		
+		//clear
+		SDL_Color colour = { 0 };
+		SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
+		SDL_RenderClear(renderer);
+		xy.lock();
+		SDL_Rect rect = {x,y,punto.ancho,punto.alto };
+		xy.unlock();
+		//pinto cuadrado
+		colour = { Uint8(16777215) };
+		SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
+		xy.lock();
+		for (int a = x; a < punto.ancho + x; a++) {
+			for (int b = y; b < punto.alto + y; b++) {
+				SDL_RenderDrawPoint(renderer, a, b);
+			}
+		}
+		xy.unlock();
+		//present
+		SDL_RenderPresent(renderer);
+		i++;
+	}
 	//actualizar la posicion del cuadrado.
 
 	server.join();
 
 	//Release SDL
-	
+
 	std::cout << "Server terminado." << std::endl;
+	SDL_DestroyWindow(ventana);
+
 	SDL_Quit();
+	return 0;
 }
