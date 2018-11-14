@@ -4,24 +4,45 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText editTextAddress, editTextPort;
     Button buttonConnect;
     TextView textViewState, textViewRx;
-
+    float x;
+    float y;
     UdpClientHandler udpClientHandler;
     UdpClientThread udpClientThread;
+    RelativeLayout myLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myLayout = findViewById(R.id.myLayout);
+
+
+        myLayout.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    x = event.getX();
+                    y = event.getY();
+                    System.out.println(x);
+                    System.out.println(y);
+                }
+                return true;
+            }
+        });
 
         editTextAddress = (EditText) findViewById(R.id.address);
         editTextPort = (EditText) findViewById(R.id.port);
@@ -43,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     udpClientThread = new UdpClientThread(
                             editTextAddress.getText().toString(),
                             Integer.parseInt(editTextPort.getText().toString()),
-                            udpClientHandler,800,568);
+                            udpClientHandler,(int)x,(int)y);
                     udpClientThread.start();
 
                     buttonConnect.setEnabled(false);
@@ -95,4 +116,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 }
