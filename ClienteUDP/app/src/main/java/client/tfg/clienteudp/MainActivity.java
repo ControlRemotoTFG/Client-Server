@@ -12,13 +12,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     EditText editTextAddress, editTextPort;
     Button buttonConnect;
     TextView textViewState, textViewRx;
-    float x;
-    float y;
+    float x =0;
+    float y = 0;
+    byte _up =0;
+    byte _down =0;
+    byte _left =0;
+    byte _right =0;
+    byte _A =0;
+    byte _B =0;
+    byte _START =0;
+    byte _SELECT =0;
+
+    Rect up = new Rect(201,52,171,114);
+    Rect down = new Rect(201,288,171,114);
+    Rect left = new Rect(55,175,171,114);
+    Rect right = new Rect(363,166,171,114);
+
+    Rect A = new Rect(480,348,358,260);
+    Rect B = new Rect(611,689,347,239);
+    Rect select = new Rect(13,818,446,74);
+    Rect start = new Rect(40,626,401,93);
+
     UdpClientHandler udpClientHandler;
     UdpClientThread udpClientThread;
     RelativeLayout myLayout = null;
@@ -35,10 +56,57 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event){
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    //TODO: get x and y coordenates and calculate wich hotspot has been touched
                     x = event.getX();
                     y = event.getY();
                     System.out.println(x);
                     System.out.println(y);
+
+                     _up =0;
+                     _down =0;
+                     _left =0;
+                     _right =0;
+                     _A =0;
+                     _B =0;
+                     _START =0;
+                     _SELECT =0;
+
+
+                    if(up.pulsado((int)x,(int)y))
+                        _up = 1;
+                     if(down.pulsado((int)x,(int)y))
+                        _down = 1;
+                     if(left.pulsado((int)x,(int)y))
+                        _left = 1;
+                     if(right.pulsado((int)x,(int)y))
+                        _right = 1;
+                     if(A.pulsado((int)x,(int)y))
+                        _A = 1;
+                     if(B.pulsado((int)x,(int)y))
+                        _B = 1;
+                     if(start.pulsado((int)x,(int)y))
+                        _START = 1;
+                     if(select.pulsado((int)x,(int)y))
+                        _SELECT= 1;
+
+
+
+
+                    udpClientThread = new UdpClientThread(
+                            editTextAddress.getText().toString(),
+                            Integer.parseInt(editTextPort.getText().toString()),
+                            udpClientHandler,
+                            _up,
+                            _down,
+                            _left,
+                            _right,
+                            _A,
+                            _B,
+                            _START,
+                            _SELECT);
+                            udpClientThread.start();
+
                 }
                 return true;
             }
@@ -64,8 +132,17 @@ public class MainActivity extends AppCompatActivity {
                     udpClientThread = new UdpClientThread(
                             editTextAddress.getText().toString(),
                             Integer.parseInt(editTextPort.getText().toString()),
-                            udpClientHandler,(int)x,(int)y);
+                            udpClientHandler,
+                            _up,
+                            _down,
+                            _left,
+                            _right,
+                            _A,
+                            _B,
+                            _START,
+                            _SELECT);
                     udpClientThread.start();
+
 
                     buttonConnect.setEnabled(false);
                 }
@@ -117,4 +194,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public class Rect{
+        Rect(int x,int y, int ancho, int alto){
+            _x=x;
+            _y=y;
+            _alto=alto;
+            _ancho=ancho;
+
+        }
+
+        boolean pulsado(int x, int y){
+
+            return x>=_x && x<=(_ancho + _x) && y>=_y && y<=(_alto + _y);
+        }
+
+        int _x;
+        int _y;
+        int _alto;
+        int _ancho;
+    }
+
 }
+
+

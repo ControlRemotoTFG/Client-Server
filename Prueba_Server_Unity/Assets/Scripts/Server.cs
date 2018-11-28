@@ -6,25 +6,40 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Server_CSharp;
+using System.Threading;
 
-public class Server : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-        UDPSocket s = new UDPSocket();
+public class Server : MonoBehaviour
+{
+
+    public String IP;
+    public System.Int32 Port;
+    UDPSocket s;
+    // Use this for initialization
+    void Start()
+    {
+
+        s = new UDPSocket();
         Debug.Log("New hecho.");
-        s.Server("147.96.100.53", 54000);
-       Debug.Log("Servidor creado en puerto 54000 y con la ip 147.96.100.53");
+        s.init(IP, Port);
+        Debug.Log("Servidor creado en puerto " + Port + " y con la ip " + IP);
 
 
 
         Console.ReadLine();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public byte[] MandoState()
+    {
+        return s.TakeCommands();
+    }
+   
 }
 
 
@@ -33,51 +48,70 @@ namespace Server_CSharp
 {
     public class UDPSocket
     {
-        private Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        private const int bufSize = 8 * 1024;
-        private State state = new State();
-        private EndPoint epFrom = new IPEndPoint(IPAddress.Any, 0);
-        private AsyncCallback recv = null;
+        Thread receiveThread;
+        int puerto;
+        UdpClient client;
+         byte[] data;
 
-        public class State
+        // init
+        public void init(String ip, int port)
         {
-            public byte[] buffer = new byte[bufSize];
+            Debug.Log("UDPSend.init()");
+            puerto = port;
+            receiveThread = new Thread(
+                new ThreadStart(ReceiveData));
+            receiveThread.IsBackground = true;
+            receiveThread.Start();
+
+
+
         }
 
-        public void Server(string address, int port)
+        // receive thread
+        private void ReceiveData()
         {
-            _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, true);
-            _socket.Bind(new IPEndPoint(IPAddress.Parse(address), port));
-            Debug.Log("Bind hecho,preparado para recibir mensajes.");
-            Receive();
-        }
 
-        public void Client(string address, int port)
-        {
-            _socket.Connect(IPAddress.Parse(address), port);
-            Receive();
-        }
-
-        public void Send(string text)
-        {
-            byte[] data = Encoding.ASCII.GetBytes(text);
-            _socket.BeginSend(data, 0, data.Length, SocketFlags.None, (ar) =>
+            client = new UdpClient(puerto);
+            while (true)
             {
-                State so = (State)ar.AsyncState;
-                int bytes = _socket.EndSend(ar);
-                Debug.Log("SEND: "+bytes+", "+text);
-            }, state);
+
+                try
+                {
+                    IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                    data = client.Receive(ref anyIP);
+
+                    if(data[0] == 1)
+                        Debug.Log("up");
+                     if (data[1] == 1)
+                        Debug.Log("down");
+                     if (data[2] == 1)
+                        Debug.Log("left");
+                     if (data[3] == 1)
+                        Debug.Log("right");
+                     if (data[4] == 1)
+                        Debug.Log("A");
+                     if (data[5] == 1)
+                        Debug.Log("B");
+                     if (data[6] == 1)
+                        Debug.Log("START");
+                     if (data[7] == 1)
+                        Debug.Log("SELECT");
+
+
+                }
+                catch (Exception err)
+                {
+                    break;
+                    Debug.Log(err.ToString());
+                }
+            }
         }
 
-        private void Receive()
+        public byte[] TakeCommands()
         {
-            _socket.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv = (ar) =>
-            {
-                State so = (State)ar.AsyncState;
-                int bytes = _socket.EndReceiveFrom(ar, ref epFrom);
-                _socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
-                Debug.Log("RECV: " + epFrom.ToString()+" : " + bytes+ "," + Encoding.ASCII.GetString(so.buffer, 0, bytes));
-            }, state);
+            byte[] aux = data;
+            data = null;
+            return aux;
         }
     }
 }
