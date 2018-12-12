@@ -7,37 +7,49 @@ using System.Net.Sockets;
 using System.Text;
 using Server_CSharp;
 using System.Threading;
+using UnityEngine.UI;
 
 
 public class Server : MonoBehaviour
 {
 
-    public String IP;
+    string IP;
     public System.Int32 Port;
     UDPSocket s;
+    public PlayerController player;
+    public Text text;
     // Use this for initialization
-    void Start()
-    {
 
+
+    public void IniciarServer()
+    {
         s = new UDPSocket();
         Debug.Log("New hecho.");
-        s.init(IP, Port);
-        Debug.Log("Servidor creado en puerto " + Port + " y con la ip " + IP);
-
-
-
-        Console.ReadLine();
+        IP = GetIp();
+        s.init(IP, Port, player);
+        text.text = "Servidor creado en puerto " + Port + " y con la ip " + IP;
     }
 
-    // Update is called once per frame
-    void Update()
+    private string GetIp()
     {
+        IPHostEntry host;
+        string localIP = "?";
+        host = Dns.GetHostEntry(Dns.GetHostName());
 
+        foreach(IPAddress ip in host.AddressList)
+        {
+            if (ip.AddressFamily.ToString() == "InterNetwork")
+            {
+                localIP = ip.ToString();
+            }
+        }
+        return localIP;
     }
 
-    public byte[] MandoState()
+    public void CerrarServer()
     {
-        return s.TakeCommands();
+        s.continua = false;
+        
     }
    
 }
@@ -51,12 +63,17 @@ namespace Server_CSharp
         Thread receiveThread;
         int puerto;
         UdpClient client;
-         byte[] data;
-
+        byte[] data;
+        PlayerController player;
+        public bool continua = true;
+        
+       
         // init
-        public void init(String ip, int port)
+        public void init(String ip, int port,PlayerController p)
         {
+
             Debug.Log("UDPSend.init()");
+            player = p;
             puerto = port;
             receiveThread = new Thread(
                 new ThreadStart(ReceiveData));
@@ -72,46 +89,70 @@ namespace Server_CSharp
         {
 
             client = new UdpClient(puerto);
-            while (true)
+            while (continua)
             {
 
                 try
                 {
+                    
                     IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                    
                     data = client.Receive(ref anyIP);
 
-                    if(data[0] == 1)
-                        Debug.Log("up");
-                     if (data[1] == 1)
-                        Debug.Log("down");
-                     if (data[2] == 1)
-                        Debug.Log("left");
-                     if (data[3] == 1)
-                        Debug.Log("right");
-                     if (data[4] == 1)
-                        Debug.Log("A");
-                     if (data[5] == 1)
-                        Debug.Log("B");
-                     if (data[6] == 1)
-                        Debug.Log("START");
-                     if (data[7] == 1)
-                        Debug.Log("SELECT");
+                    
+
+
+                    if (data[0] == 1)
+                        player.SetByteData(0, 1);
+                    else
+                        player.SetByteData(0, 0);
+                    if (data[1] == 1)
+                        player.SetByteData(1, 1);
+                    else
+                        player.SetByteData(1, 0);
+                    if (data[2] == 1)
+                        player.SetByteData(2, 1);
+                    else
+                        player.SetByteData(2, 0);
+                    if (data[3] == 1)
+                        player.SetByteData(3, 1);
+                    else
+                        player.SetByteData(3, 0);
+                    if (data[4] == 1)
+                        player.SetByteData(4, 1);
+                    else
+                        player.SetByteData(4, 0);
+                    if (data[5] == 1)
+                        player.SetByteData(5, 1);
+                    else
+                        player.SetByteData(5, 0);
+                    if (data[6] == 1)
+                        player.SetByteData(6, 1);
+                    else
+                        player.SetByteData(6, 0);
+                    if (data[7] == 1)
+                        player.SetByteData(7, 1);
+                    else
+                        player.SetByteData(7, 0);
+
+
+
+
+
 
 
                 }
                 catch (Exception err)
                 {
+                    
                     break;
-                    Debug.Log(err.ToString());
+
                 }
             }
+            
         }
 
-        public byte[] TakeCommands()
-        {
-            byte[] aux = data;
-            data = null;
-            return aux;
-        }
+        
     }
 }
+

@@ -30,27 +30,27 @@ public class UdpClientThread extends Thread{
     InetAddress address;
 
     public UdpClientThread(String addr, int port, MainActivity.UdpClientHandler handler ,
-            byte up,
-            byte down,
-            byte left,
-            byte right,
-            byte A,
-            byte B,
-            byte START,
-            byte SELECT) {
+                           byte up,
+                           byte down,
+                           byte left,
+                           byte right,
+                           byte A,
+                           byte B,
+                           byte START,
+                           byte SELECT) {
         super();
         dstAddress = addr;
         dstPort = port;
         this.handler = handler;
 
-         _up = up;
-         _down =down;
-         _left = left;
-         _right = right;
-         _A = A;
-         _B = B;
-         _START = START;
-         _SELECT = SELECT;
+        _up = up;
+        _down =down;
+        _left = left;
+        _right = right;
+        _A = A;
+        _B = B;
+        _START = START;
+        _SELECT = SELECT;
 
 
     }
@@ -99,11 +99,8 @@ public class UdpClientThread extends Thread{
 
             /*// get response
             packet = new DatagramPacket(buf, buf.length);
-
-
             socket.receive(packet);
             String line = new String(packet.getData(), 0, packet.getLength());
-
             handler.sendMessage(
                     Message.obtain(handler, MainActivity.UdpClientHandler.UPDATE_MSG, line));
             */
@@ -122,4 +119,3 @@ public class UdpClientThread extends Thread{
 
     }
 }
-

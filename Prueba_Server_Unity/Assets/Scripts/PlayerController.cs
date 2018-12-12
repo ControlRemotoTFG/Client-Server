@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public Server server;
     byte[] data;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        transform.Translate(0, 0, 0);
-        data = server.MandoState();
 
+    void Start()
+    {
+        data = new byte[8];
+        data[0] = data[1] = data[2] = data[3] = data[4] = data[5] = data[6] = data[7] = 0 ;
+    }
+    public void SetByteData(int indice, byte valor)
+    {
+        data[indice] = valor;
+
+    }
+	 void Update () {
+        transform.Translate(0, 0, 0);
         if (data != null)
         {
             if (data[0] == 1)

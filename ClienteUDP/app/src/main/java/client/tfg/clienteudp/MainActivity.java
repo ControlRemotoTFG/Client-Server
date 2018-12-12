@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 
@@ -19,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextAddress, editTextPort;
     Button buttonConnect;
     TextView textViewState, textViewRx;
+
+    UdpClientHandler udpClientHandler;
+    UdpClientThread udpClientThread;
+
+    //variables de botones
     float x =0;
     float y = 0;
     byte _up =0;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     byte _START =0;
     byte _SELECT =0;
 
+    //rectangulos de botones
     Rect up = new Rect(201,52,171,114);
     Rect down = new Rect(201,288,171,114);
     Rect left = new Rect(55,175,171,114);
@@ -40,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Rect select = new Rect(13,818,446,74);
     Rect start = new Rect(40,626,401,93);
 
-    UdpClientHandler udpClientHandler;
-    UdpClientThread udpClientThread;
+
     RelativeLayout myLayout = null;
 
     @Override
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                      _START =0;
                      _SELECT =0;
 
+                    //PULSAR
 
                     if(up.pulsado((int)x,(int)y))
                         _up = 1;
@@ -106,6 +111,47 @@ public class MainActivity extends AppCompatActivity {
                             _START,
                             _SELECT);
                             udpClientThread.start();
+
+                }
+
+                //LEVANTAR
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+
+
+                    if(_up == 1)
+                        _up = 0;
+                    if(_down == 1)
+                        _down = 0;
+                    if(_left == 1)
+                        _left = 0;
+                    if(_right == 1)
+                        _right = 0;
+                    if(_A == 1)
+                        _A = 0;
+                    if(_B == 1)
+                        _B = 0;
+                    if(_START == 1)
+                        _START = 0;
+                    if(_SELECT == 1)
+                        _SELECT = 0;
+
+
+
+
+                    udpClientThread = new UdpClientThread(
+                            editTextAddress.getText().toString(),
+                            Integer.parseInt(editTextPort.getText().toString()),
+                            udpClientHandler,
+                            _up,
+                            _down,
+                            _left,
+                            _right,
+                            _A,
+                            _B,
+                            _START,
+                            _SELECT);
+                    udpClientThread.start();
 
                 }
                 return true;
@@ -194,6 +240,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+    // class Rect
+    // Clase para los botones que vamos a pulsar, detecta si se ha pulsado dicho Rect.
     public class Rect{
         Rect(int x,int y, int ancho, int alto){
             _x=x;
@@ -213,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
         int _alto;
         int _ancho;
     }
+
 
 }
 
