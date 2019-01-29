@@ -21,6 +21,8 @@ public class UdpClientThread extends Thread{
     byte _SELECT;
 
 
+    boolean ready = false;
+
     String dstAddress;
     int dstPort;
     private boolean running;
@@ -65,37 +67,68 @@ public class UdpClientThread extends Thread{
                         MainActivity.UdpClientHandler.UPDATE_STATE, state));
     }
 
+
+    public void clicked(String addr, int port,
+                        byte up,
+                        byte down,
+                        byte left,
+                        byte right,
+                        byte A,
+                        byte B,
+                        byte START,
+                        byte SELECT){
+
+        dstAddress = addr;
+        dstPort = port;
+
+        _up = up;
+        _down =down;
+        _left = left;
+        _right = right;
+        _A = A;
+        _B = B;
+        _START = START;
+        _SELECT = SELECT;
+        ready = true;
+
+    }
+
+
     @Override
     public void run() {
         sendState("connecting...");
 
         running = true;
 
-        try {
-            socket = new DatagramSocket();
-            address = InetAddress.getByName(dstAddress);
 
-            // send request
-            byte[] buf = new byte[256];
+        while(running) {
+            if(ready) {
+                try {
+                    ready = false;
+                    socket = new DatagramSocket();
+                    address = InetAddress.getByName(dstAddress);
 
-            buf [0] = _up;
-            buf [1] = _down;
-            buf [2] = _left;
-            buf [3] = _right;
+                    // send request
+                    byte[] buf = new byte[256];
+
+                    buf[0] = _up;
+                    buf[1] = _down;
+                    buf[2] = _left;
+                    buf[3] = _right;
 
 
-            buf [4] = _A;
-            buf [5] = _B;
-            buf [6] = _START;
-            buf [7] =_SELECT;
+                    buf[4] = _A;
+                    buf[5] = _B;
+                    buf[6] = _START;
+                    buf[7] = _SELECT;
 
-            DatagramPacket packet =
-                    new DatagramPacket(buf, buf.length, address, dstPort);
-            socket.send(packet);
+                    DatagramPacket packet =
+                            new DatagramPacket(buf, buf.length, address, dstPort);
+                    socket.send(packet);
 
-            sendState("connected");
+                    sendState("connected");
 
-            //client wait to response for the message
+                    //client wait to response for the message
 
             /*// get response
             packet = new DatagramPacket(buf, buf.length);
@@ -104,18 +137,20 @@ public class UdpClientThread extends Thread{
             handler.sendMessage(
                     Message.obtain(handler, MainActivity.UdpClientHandler.UPDATE_MSG, line));
             */
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(socket != null){
-                socket.close();
-                handler.sendEmptyMessage(MainActivity.UdpClientHandler.UPDATE_END);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (socket != null) {
+                        socket.close();
+                        handler.sendEmptyMessage(MainActivity.UdpClientHandler.UPDATE_END);
+                        running = false;
+                    }
+                }
             }
         }
-
     }
 }

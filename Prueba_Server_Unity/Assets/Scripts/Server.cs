@@ -99,14 +99,17 @@ namespace Server_CSharp
                     
                     data = client.Receive(ref anyIP);
 
-                    
+
 
 
                     if (data[0] == 1)
                         player.SetByteData(0, 1);
                     else
+                    {
                         player.SetByteData(0, 0);
-                    if (data[1] == 1)
+                        Debug.Log("Satan is coming to town");
+                    }
+                        if (data[1] == 1)
                         player.SetByteData(1, 1);
                     else
                         player.SetByteData(1, 0);

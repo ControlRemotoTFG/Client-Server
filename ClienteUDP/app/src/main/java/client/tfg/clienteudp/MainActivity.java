@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     RelativeLayout myLayout = null;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,21 +98,33 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-                    udpClientThread = new UdpClientThread(
-                            editTextAddress.getText().toString(),
-                            Integer.parseInt(editTextPort.getText().toString()),
-                            udpClientHandler,
-                            _up,
-                            _down,
-                            _left,
-                            _right,
-                            _A,
-                            _B,
-                            _START,
-                            _SELECT);
-                            udpClientThread.start();
-
+                    if(udpClientThread == null) {
+                        udpClientThread = new UdpClientThread(
+                                editTextAddress.getText().toString(),
+                                Integer.parseInt(editTextPort.getText().toString()),
+                                udpClientHandler,
+                                _up,
+                                _down,
+                                _left,
+                                _right,
+                                _A,
+                                _B,
+                                _START,
+                                _SELECT);
+                        udpClientThread.start();
+                    }
+                    else
+                        udpClientThread.clicked(
+                                editTextAddress.getText().toString(),
+                                Integer.parseInt(editTextPort.getText().toString()),
+                                _up,
+                                _down,
+                                _left,
+                                _right,
+                                _A,
+                                _B,
+                                _START,
+                                _SELECT);
                 }
 
                 //LEVANTAR
@@ -119,39 +132,44 @@ public class MainActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
 
 
-                    if(_up == 1)
-                        _up = 0;
-                    if(_down == 1)
-                        _down = 0;
-                    if(_left == 1)
-                        _left = 0;
-                    if(_right == 1)
-                        _right = 0;
-                    if(_A == 1)
-                        _A = 0;
-                    if(_B == 1)
-                        _B = 0;
-                    if(_START == 1)
-                        _START = 0;
-                    if(_SELECT == 1)
-                        _SELECT = 0;
+                    _up = 0;
+                    _down = 0;
+                    _left = 0;
+                    _right = 0;
+                    _A = 0;
+                    _B = 0;
+                    _START = 0;
+                    _SELECT = 0;
 
 
 
-
-                    udpClientThread = new UdpClientThread(
-                            editTextAddress.getText().toString(),
-                            Integer.parseInt(editTextPort.getText().toString()),
-                            udpClientHandler,
-                            _up,
-                            _down,
-                            _left,
-                            _right,
-                            _A,
-                            _B,
-                            _START,
-                            _SELECT);
-                    udpClientThread.start();
+                    if(udpClientThread == null) {
+                        udpClientThread = new UdpClientThread(
+                                editTextAddress.getText().toString(),
+                                Integer.parseInt(editTextPort.getText().toString()),
+                                udpClientHandler,
+                                _up,
+                                _down,
+                                _left,
+                                _right,
+                                _A,
+                                _B,
+                                _START,
+                                _SELECT);
+                        udpClientThread.start();
+                    }
+                    else
+                        udpClientThread.clicked(
+                                editTextAddress.getText().toString(),
+                                Integer.parseInt(editTextPort.getText().toString()),
+                                _up,
+                                _down,
+                                _left,
+                                _right,
+                                _A,
+                                _B,
+                                _START,
+                                _SELECT);
 
                 }
                 return true;
