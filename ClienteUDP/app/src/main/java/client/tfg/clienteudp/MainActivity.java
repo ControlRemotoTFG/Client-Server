@@ -187,6 +187,20 @@ public class MainActivity extends AppCompatActivity {
         udpClientHandler = new UdpClientHandler(this);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        udpClientThread.setRunning(false);
+        try {
+            udpClientThread.join();
+        }
+        catch (java.lang.InterruptedException a){
+
+        }
+        System.out.print("He terminado");
+    }
+
+
     View.OnClickListener buttonConnectOnClickListener =
             new View.OnClickListener() {
 

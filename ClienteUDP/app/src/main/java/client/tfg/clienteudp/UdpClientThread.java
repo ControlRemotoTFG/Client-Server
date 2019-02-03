@@ -143,14 +143,25 @@ public class UdpClientThread extends Thread{
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
-                    if (socket != null) {
-                        socket.close();
-                        handler.sendEmptyMessage(MainActivity.UdpClientHandler.UPDATE_END);
-                        running = false;
-                    }
                 }
             }
         }
+
+        byte[] buf = new byte[8];
+
+        buf[0] = 2;
+
+        DatagramPacket packet =
+                new DatagramPacket(buf, buf.length, address, dstPort);
+
+        try {
+            socket.send(packet);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        System.out.print("Mensaje mandado");
+        socket.close();
+        handler.sendEmptyMessage(MainActivity.UdpClientHandler.UPDATE_END);
     }
 }

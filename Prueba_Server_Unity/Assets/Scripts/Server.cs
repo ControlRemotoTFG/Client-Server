@@ -48,8 +48,7 @@ public class Server : MonoBehaviour
 
     public void CerrarServer()
     {
-        s.continua = false;
-        
+        s.StopRunning();
     }
    
 }
@@ -65,7 +64,7 @@ namespace Server_CSharp
         UdpClient client;
         byte[] data;
         PlayerController player;
-        public bool continua = true;
+        bool continua = true;
         
        
         // init
@@ -80,8 +79,12 @@ namespace Server_CSharp
             receiveThread.IsBackground = true;
             receiveThread.Start();
 
+        }
 
-
+        public void StopRunning()
+        {
+            continua = false;
+            
         }
 
         // receive thread
@@ -94,68 +97,57 @@ namespace Server_CSharp
 
                 try
                 {
-                    
                     IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                     
-                    data = client.Receive(ref anyIP);
+                    data = client.Receive(ref anyIP); //bloqueante
 
-
-
-
-                    if (data[0] == 1)
-                        player.SetByteData(0, 1);
+                    if (data[0] == 2)
+                    {
+                        continua = false;
+                    }
                     else
                     {
-                        player.SetByteData(0, 0);
-                        Debug.Log("Satan is coming to town");
-                    }
+                        if (data[0] == 1)
+                            player.SetByteData(0, 1);
+                        else
+                            player.SetByteData(0, 0);
                         if (data[1] == 1)
-                        player.SetByteData(1, 1);
-                    else
-                        player.SetByteData(1, 0);
-                    if (data[2] == 1)
-                        player.SetByteData(2, 1);
-                    else
-                        player.SetByteData(2, 0);
-                    if (data[3] == 1)
-                        player.SetByteData(3, 1);
-                    else
-                        player.SetByteData(3, 0);
-                    if (data[4] == 1)
-                        player.SetByteData(4, 1);
-                    else
-                        player.SetByteData(4, 0);
-                    if (data[5] == 1)
-                        player.SetByteData(5, 1);
-                    else
-                        player.SetByteData(5, 0);
-                    if (data[6] == 1)
-                        player.SetByteData(6, 1);
-                    else
-                        player.SetByteData(6, 0);
-                    if (data[7] == 1)
-                        player.SetByteData(7, 1);
-                    else
-                        player.SetByteData(7, 0);
-
-
-
-
-
-
-
+                            player.SetByteData(1, 1);
+                        else
+                            player.SetByteData(1, 0);
+                        if (data[2] == 1)
+                            player.SetByteData(2, 1);
+                        else
+                            player.SetByteData(2, 0);
+                        if (data[3] == 1)
+                            player.SetByteData(3, 1);
+                        else
+                            player.SetByteData(3, 0);
+                        if (data[4] == 1)
+                            player.SetByteData(4, 1);
+                        else
+                            player.SetByteData(4, 0);
+                        if (data[5] == 1)
+                            player.SetByteData(5, 1);
+                        else
+                            player.SetByteData(5, 0);
+                        if (data[6] == 1)
+                            player.SetByteData(6, 1);
+                        else
+                            player.SetByteData(6, 0);
+                        if (data[7] == 1)
+                            player.SetByteData(7, 1);
+                        else
+                            player.SetByteData(7, 0);
+                    }
                 }
                 catch (Exception err)
                 {
-                    
+                    Debug.Log("Finalizada conexion manera abrupta");
                     break;
-
                 }
             }
-            
-        }
-
-        
+        } 
     }
 }
 
