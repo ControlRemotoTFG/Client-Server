@@ -17,17 +17,22 @@ public class Server : MonoBehaviour
     public System.Int32 Port;
     UDPSocket s;
     public PlayerController player;
-    public Text text;
     // Use this for initialization
 
-
+    public string getIP()
+    {
+        return IP;
+    }
+    public System.Int32 getPort()
+    {
+        return Port;
+    }
     public void IniciarServer()
     {
         s = new UDPSocket();
         Debug.Log("New hecho.");
         IP = GetIp();
         s.init(IP, Port, player);
-        text.text = "Servidor creado en puerto " + Port + " y con la ip " + IP;
     }
 
     private string GetIp()
