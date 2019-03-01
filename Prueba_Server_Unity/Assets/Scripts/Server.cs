@@ -54,6 +54,8 @@ public class Server : MonoBehaviour
     public void CerrarServer()
     {
         s.StopRunning();
+        Application.Quit();
+
     }
    
 }
@@ -104,6 +106,7 @@ namespace Server_CSharp
                 {
                     IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                     
+                    //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     data = client.Receive(ref anyIP); //bloqueante
 
                     if (data[0] == 2)

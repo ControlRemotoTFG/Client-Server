@@ -1,18 +1,14 @@
-﻿Proyecto realizado por Pablo Gómez Calvo y Sergio Juan Higuera Velasco.
+﻿Pablo Gómez Calvo y Sergio Juan Higuera Velasco.
 
-Implementacion de un Cliente en Java que manda 2 ints serializados.
-Estos ints se mandan a un Servidor C++ que los recibe y los muestra por pantalla.
+Client is implemented using JAVA . 
+For now, we are testing the QR implementation to start connections between client and server.
 
-Recordar mirar siempre la ip del pc antes de conectar el cliente, mirarla con ipconfig en el CMD.
-Puerto por defecto 54000.
+Default port 54000 and it takes your IP automatically.
 
 
-HACER COSAS:
+TODO IN THIS QR PART:
 
--Movil funciona con diferentes resoluciones.
-
--Unity funciona con el patrón observer.
-
--(Movil)Solamente se ponga el puerto y la ip una vez.
-
--Defenir protocolo y hacerlo.
+- SERVER DOESN'T BLOCK IN RECEIVE CALL.
+- WHEN THE CLIENT CONNECTS, SERVER MUST GIVE THE OPTION TO CHOOSE THE TYPE OF JOYSTICK.
+- WHEN THE CLIENT CONNECTS, HE MUST SEND HIS RESOLUTION TO THE SERVER.
+- 

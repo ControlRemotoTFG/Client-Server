@@ -13,7 +13,7 @@ public class QR : MonoBehaviour
         System.Int32 port = server.getPort();
         string ip = server.getIP();
 
-        myQR = generateQR(port + " " + ip);
+        myQR = generateQR(port + "_" + ip);
     }
 
  
@@ -21,7 +21,7 @@ public class QR : MonoBehaviour
     {
 
        
-        if (GUI.Button(new Rect(100, 100, 256, 256), myQR, GUIStyle.none)) { }
+        if (GUI.Button(new Rect((Screen.width/2) - 150, (Screen.height/2) - 150, 256, 256), myQR, GUIStyle.none)) { }
 
     }
 private static Color32[] Encode(string textForEncoding, int width, int height)
