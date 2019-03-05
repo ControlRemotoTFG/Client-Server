@@ -67,33 +67,72 @@ namespace Server_CSharp
     public class UDPSocket
     {
         Thread receiveThread;
+        Thread sendThread;
         int puerto;
+        int puertoMovil;
         UdpClient client;
+        UdpClient movil;
         byte[] data;
+        byte[] sendData;
         PlayerController player;
         bool continua = true;
-        
-       
+        bool sending = true;
+        bool send = true;
         // init
-        public void init(String ip, int port,PlayerController p)
+        public void init(String ip, int port, PlayerController p)
         {
-
             Debug.Log("UDPSend.init()");
             player = p;
             puerto = port;
             receiveThread = new Thread(
                 new ThreadStart(ReceiveData));
+            sendThread = new Thread(
+                new ThreadStart(SendData));
             receiveThread.IsBackground = true;
             receiveThread.Start();
-
+            sendThread.IsBackground = true;
+            sendThread.Start();
         }
 
         public void StopRunning()
         {
             continua = false;
-            
         }
 
+        public void StopSending()
+        {
+            sending = false;
+        }
+
+        public void Send()
+        {
+            send = true;
+        }
+
+        // send thread
+        private void SendData() {
+            movil = new UdpClient(2004);
+            sendData = new byte[10];
+            int cont = 0;
+            while (sending)
+            {
+                send = true;
+                if (send)
+                {
+                    if (cont < 10)
+                        sendData[0] = 5;
+                    else if (cont >= 10 && cont < 16)
+                        sendData[0] = 7;
+                    else
+                        sending = false;
+                    movil.Send(sendData,10);
+                }
+                cont++;
+            }
+            //fin de comunicación
+            sendData[0] = 1;
+            movil.Send(sendData, 10);
+        } 
         // receive thread
         private void ReceiveData()
         {
