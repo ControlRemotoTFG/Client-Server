@@ -11,9 +11,9 @@ public class QR : MonoBehaviour
      public void Generate_QR()
     {
         System.Int32 port = server.getPort();
-        string ip = server.getIP();
+        string ip = "192.168.1.47";
 
-        myQR = generateQR(port + "_" + ip);
+        myQR = generateQR(port + ":" + ip);
     }
 
  

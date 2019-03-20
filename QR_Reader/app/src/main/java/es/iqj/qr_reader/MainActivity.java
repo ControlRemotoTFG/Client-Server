@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = ""; //lo que vamos a leer
     private String tokenanterior = "";  //lo que hemos leido antes
+    Intent controllerCreenIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         initQR();
+    }
+    @Override
+    protected void  onStop(){
+        super.onStop();
     }
 
     public void initQR() {
@@ -109,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
                         tokenanterior = token;
                         Log.i("token", token);
 
-                        Intent controllerCreenIntent = new Intent(MainActivity.this, Controller.class);
+                        controllerCreenIntent = new Intent(getApplicationContext(), Controller.class);
                         controllerCreenIntent.putExtra("token",token);
+                        startActivity(controllerCreenIntent);
+                        finish();
 
                     }
 

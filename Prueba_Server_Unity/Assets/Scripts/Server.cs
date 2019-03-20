@@ -31,7 +31,7 @@ public class Server : MonoBehaviour
     {
         s = new UDPSocket();
         Debug.Log("New hecho.");
-        IP = GetIp();
+        IP = "192.168.1.47";
         s.init(IP, Port, player);
     }
 
@@ -86,12 +86,12 @@ namespace Server_CSharp
             puerto = port;
             receiveThread = new Thread(
                 new ThreadStart(ReceiveData));
-            sendThread = new Thread(
-                new ThreadStart(SendData));
+           // sendThread = new Thread(
+            //    new ThreadStart(SendData));
             receiveThread.IsBackground = true;
             receiveThread.Start();
-            sendThread.IsBackground = true;
-            sendThread.Start();
+          //  sendThread.IsBackground = true;
+        //    sendThread.Start();
         }
 
         public void StopRunning()
@@ -147,7 +147,7 @@ namespace Server_CSharp
                     
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     data = client.Receive(ref anyIP); //bloqueante
-
+                    Debug.Log("me cago en tu familia");
                     if (data[0] == 2)
                     {
                         continua = false;
@@ -155,7 +155,10 @@ namespace Server_CSharp
                     else
                     {
                         if (data[0] == 1)
+                        {
                             player.SetByteData(0, 1);
+                            
+                        }
                         else
                             player.SetByteData(0, 0);
                         if (data[1] == 1)
