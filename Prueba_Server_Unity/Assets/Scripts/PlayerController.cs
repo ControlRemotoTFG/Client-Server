@@ -21,13 +21,13 @@ public class PlayerController : MonoBehaviour {
         if (data != null)
         {
             if (data[0] == 1)
-                transform.Translate(0, 0.1f, 0);
+                transform.Translate(0, 1, 0);
             if (data[1] == 1)
                 transform.Translate(0, -0.1f, 0);
             if (data[2] == 1)
                 transform.Translate(-0.1f, 0, 0);
             if (data[3] == 1)
-                transform.Translate(0.1f, 0, 0);
+                transform.Translate(1, 0, 0);
             if (data[4] == 1)
                 transform.Translate(0, 0.1f, 0);
             if (data[5] == 1)

@@ -26,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private CameraSource cameraSource;
     private SurfaceView cameraView;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
-    private String token = "";
-    private String tokenanterior = "";
+    private String token = ""; //lo que vamos a leer
+    private String tokenanterior = "";  //lo que hemos leido antes
+    Intent controllerCreenIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         initQR();
+    }
+    @Override
+    protected void  onStop(){
+        super.onStop();
     }
 
     public void initQR() {
@@ -105,45 +111,17 @@ public class MainActivity extends AppCompatActivity {
 
                     // obtenemos el token
                     token = barcodes.valueAt(0).displayValue.toString();
-
-                    // verificamos que el token anterior no se igual al actual
-                    // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
-
-                        // guardamos el ultimo token proceado
                         tokenanterior = token;
                         Log.i("token", token);
 
-                        if (URLUtil.isValidUrl(token)) {
-                            // si es una URL valida abre el navegador
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
-                            startActivity(browserIntent);
-                        } else {
-                            // comparte en otras apps
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, token);
-                            shareIntent.setType("text/plain");
-                            startActivity(shareIntent);
-                        }
-
-                        new Thread(new Runnable() {
-                            public void run() {
-                                try {
-                                    synchronized (this) {
-                                        wait(5000);
-                                        // limpiamos el token
-                                        tokenanterior = "";
-                                    }
-                                } catch (InterruptedException e) {
-                                    // TODO Auto-generated catch block
-                                    Log.e("Error", "Waiting didnt work!!");
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
+                        controllerCreenIntent = new Intent(getApplicationContext(), Controller.class);
+                        controllerCreenIntent.putExtra("token",token);
+                        startActivity(controllerCreenIntent);
+                        finish();
 
                     }
+
                 }
             }
         });

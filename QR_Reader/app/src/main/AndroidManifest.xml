@@ -3,6 +3,8 @@
     package="es.iqj.qr_reader">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -18,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Controller"
+            android:label="Controller"
+            android:theme = "@style/AppTheme"></activity>
     </application>
 
 </manifest>
