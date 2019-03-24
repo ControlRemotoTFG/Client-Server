@@ -25,7 +25,7 @@ public class Controller extends Activity  {
 
     UdpClientHandler udpClientHandler;
     UdpClientThread udpClientThread;
-
+    Receive_Image receive_image;
     //variables de botones
     float x =0;
     float y = 0;
@@ -213,7 +213,7 @@ public class Controller extends Activity  {
         });
 
 
-
+        receive_image = new Receive_Image(ip,Integer.parseInt(puerto));
 
         udpClientHandler = new UdpClientHandler(this);
     }
@@ -222,8 +222,10 @@ public class Controller extends Activity  {
     public void onDestroy(){
         super.onDestroy();
         udpClientThread.setRunning(false);
+        receive_image.setRunning(false);
         try {
             udpClientThread.join();
+            receive_image.join();
         }
         catch (java.lang.InterruptedException a){
 
@@ -231,15 +233,6 @@ public class Controller extends Activity  {
         System.out.print("He terminado");
     }
 
-
-
-
-
-
-    private void clientEnd(){
-        udpClientThread = null;
-
-    }
 
     public static class UdpClientHandler extends Handler {
         public static final int UPDATE_STATE = 0;

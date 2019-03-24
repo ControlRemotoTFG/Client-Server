@@ -99,8 +99,12 @@ public class UdpClientThread extends Thread{
 
 
         running = true;
-
-
+        /*try {
+            socket = new DatagramSocket();
+        }
+        catch (SocketException e){
+            e.printStackTrace();
+        }*/
         while(running) {
             if(ready) {
                 try {
