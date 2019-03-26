@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 
 public class Receive_Image extends Thread {
@@ -27,28 +29,33 @@ public class Receive_Image extends Thread {
     @Override
     public void run(){
         running = true;
-        byte[] message = new byte[50];
-
+        DatagramSocket serversocket=null;
         try {
-            packet = new DatagramPacket(message, message.length);
-            socket = new DatagramSocket(port);
-        }catch (SocketException e) {
+             serversocket = new DatagramSocket(port);
+             System.out.println("Holiwi__" + serversocket.getLocalSocketAddress() + "_____" + serversocket.getLocalPort());
+             System.out.println(port);
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-
         while(running) {
             try {
+                byte[] message = new byte[10];
+                DatagramPacket receivePacket = new DatagramPacket(message, message.length);
+                serversocket.receive(receivePacket);
 
-                socket.receive(packet);
-
+                System.out.println("VIVA EL VINO");
                 if(message[0] == 5)
                     System.out.println("Bien");
                 else if(message[0] == 7)
                     System.out.println("Mal");
                 else if(message[0] == 1) {
                     System.out.println("Terminando");
+
                     running = false;
                 }
+
 
             } catch (IOException e) {
                 e.printStackTrace();

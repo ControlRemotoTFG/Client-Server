@@ -214,6 +214,7 @@ public class Controller extends Activity  {
 
 
         receive_image = new Receive_Image(ip,Integer.parseInt(puerto));
+        receive_image.start();
 
         udpClientHandler = new UdpClientHandler(this);
     }

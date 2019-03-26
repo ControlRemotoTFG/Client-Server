@@ -69,7 +69,6 @@ namespace Server_CSharp
         Thread receiveThread;
         Thread sendThread;
         int puerto;
-        int puertoMovil;
         UdpClient client;
         byte[] data;
         byte[] sendData;
@@ -78,6 +77,7 @@ namespace Server_CSharp
         bool sending = false;
         bool send = true;
         IPEndPoint anyIP;
+        bool conectado = false;
         // init
         public void init(String ip, int port, PlayerController p)
         {
@@ -113,46 +113,60 @@ namespace Server_CSharp
         }
         // send thread
         private void SendData() {
+
+            System.Net.Sockets.UdpClient cliente = new System.Net.Sockets.UdpClient();
+
             sendData = new byte[10];
-            int cont = 0;
-            while (!sending) ;
-            
+            int cont = 9;
+            while (!conectado) ;
+            cliente.Connect(anyIP.Address,puerto );
             while (sending)
             {
                 send = true;
                 if (send)
                 {
-                    if (cont < 10)
-                        sendData[0] = 5;
-                    else if (cont >= 10 && cont < 16)
-                        sendData[0] = 7;
-                    else
-                        sending = false;
-                    client.Send(sendData,10,anyIP);
+                    
+                     if (cont < 10)
+                         sendData[0] = 5;
+                     else if (cont >= 10 && cont < 16)
+                         sendData[0] = 7;
+                     else
+                         sending = false;
+
+                     //s.SendTo(sendData, sendData.Length, SocketFlags.None, anyIP);
+                     
+
+                    cliente.Send(sendData,sendData.Length);
+                    Debug.Log("Se mandó.");
+                    
                 }
-                cont++;
+                cont--;
             }
             //fin de comunicación
             sendData[0] = 1;
-            client.Send(sendData, 10, anyIP);
+            cliente.Send(sendData, sendData.Length);
+            Debug.Log("termionó");
         } 
         // receive thread
         private void ReceiveData()
         {
 
             client = new UdpClient(puerto);
-
+            anyIP = new IPEndPoint(IPAddress.Any, puerto);
+           
             while (continua)
             {
 
                 try
                 {
-                    anyIP = new IPEndPoint(IPAddress.Any, 0);
-                    
-                    //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
-                    data = client.Receive(ref anyIP); //bloqueante
-                    ActivateSending();//activamos mandar img
+                   
 
+                    //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
+                    Debug.Log("Waiting...");
+                    data = client.Receive(ref anyIP); //bloqueante
+
+
+                    conectado = true;//activamos mandar img
                     if (data[0] == 2)
                     {
                         continua = false;
