@@ -98,7 +98,7 @@ public class Controller extends Activity  {
 
 
 
-        myLayout = findViewById(R.id.myLayout);
+        myLayout = findViewById(R.id.fondo);
 
 
         myLayout.setOnTouchListener(new View.OnTouchListener(){

@@ -55,6 +55,8 @@ public class UdpClientThread extends Thread{
         _SELECT = SELECT;
 
 
+
+
     }
 
     public void setRunning(boolean running){
@@ -125,6 +127,9 @@ public class UdpClientThread extends Thread{
                     buf[5] = _B;
                     buf[6] = _START;
                     buf[7] = _SELECT;
+
+                    System.out.println(address + "_______________" + dstPort);
+
                     DatagramPacket packet =
                             new DatagramPacket(buf, buf.length, address, dstPort);
                     socket.send(packet);

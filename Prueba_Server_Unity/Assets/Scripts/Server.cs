@@ -31,7 +31,7 @@ public class Server : MonoBehaviour
     {
         s = new UDPSocket();
         Debug.Log("New hecho.");
-        IP = "192.168.1.47";
+        IP = "192.168.1.7";
         s.init(IP, Port, player);
     }
 
@@ -43,6 +43,7 @@ public class Server : MonoBehaviour
 
         foreach(IPAddress ip in host.AddressList)
         {
+
             if (ip.AddressFamily.ToString() == "InterNetwork")
             {
                 localIP = ip.ToString();
@@ -145,7 +146,7 @@ namespace Server_CSharp
             //fin de comunicación
             sendData[0] = 1;
             cliente.Send(sendData, sendData.Length);
-            Debug.Log("termionó");
+            Debug.Log("terminó");
         } 
         // receive thread
         private void ReceiveData()
@@ -153,6 +154,8 @@ namespace Server_CSharp
 
             client = new UdpClient(puerto);
             anyIP = new IPEndPoint(IPAddress.Any, puerto);
+
+            Debug.Log(""+ puerto +"_________"+ anyIP.Address);
            
             while (continua)
             {
@@ -165,7 +168,7 @@ namespace Server_CSharp
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante
 
-
+                    Debug.Log("" + puerto + "_________" + anyIP.Address);
                     conectado = true;//activamos mandar img
                     if (data[0] == 2)
                     {
