@@ -113,7 +113,7 @@ public class UdpClientThread extends Thread{
                     ready = false;
                     socket = new DatagramSocket();
                     address = InetAddress.getByName(dstAddress);
-
+                    System.out.println(address);
                     // send request
                     byte[] buf = new byte[256];
 

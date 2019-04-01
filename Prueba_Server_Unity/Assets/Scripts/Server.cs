@@ -17,8 +17,9 @@ public class Server : MonoBehaviour
     public System.Int32 Port;
     UDPSocket s;
     public PlayerController player;
+    public Camera camera;
     // Use this for initialization
-
+    WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
     public string getIP()
     {
         return IP;
@@ -27,11 +28,26 @@ public class Server : MonoBehaviour
     {
         return Port;
     }
-    public void IniciarServer()
+    void LateUpdate()
     {
+        if (s != null)
+        {
+            camera.Render();
+            Texture2D texture = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
+            //Read the pixels in the Rect starting at 0,0 and ending at the screen's width and height
+            RenderTexture.active = camera.targetTexture;
+            texture.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0, false);
+            texture.Compress(false);
+            byte[] Bytes2Send = texture.GetRawTextureData();
+            Debug.Log(Bytes2Send.Length);
+            s.setTexture2D(ref Bytes2Send);
+        }
+    }
+    public void IniciarServer()
+    {          
         s = new UDPSocket();
         Debug.Log("New hecho.");
-        IP = "192.168.1.7";
+        IP = "192.168.1.33";
         s.init(IP, Port, player);
     }
 
@@ -75,10 +91,11 @@ namespace Server_CSharp
         byte[] sendData;
         PlayerController player;
         bool continua = true;
-        bool sending = false;
-        bool send = true;
+        bool sending = true;
+        bool send = false;
         IPEndPoint anyIP;
         bool conectado = false;
+        byte[] byteImg = new byte[200];
         // init
         public void init(String ip, int port, PlayerController p)
         {
@@ -94,7 +111,11 @@ namespace Server_CSharp
             sendThread.IsBackground = true;
             sendThread.Start();
         }
-
+        public void setTexture2D(ref byte[] arrayImg)
+        {
+            byteImg = arrayImg;
+            send = true;
+        }
         public void StopRunning()
         {
             continua = false;
@@ -123,23 +144,14 @@ namespace Server_CSharp
             cliente.Connect(anyIP.Address,puerto );
             while (sending)
             {
-                send = true;
                 if (send)
                 {
-                    
-                     if (cont < 10)
-                         sendData[0] = 5;
-                     else if (cont >= 10 && cont < 16)
-                         sendData[0] = 7;
-                     else
-                         sending = false;
+                    send = false;
+                    //s.SendTo(sendData, sendData.Length, SocketFlags.None, anyIP);
+                    Debug.Log(byteImg.Length);
 
-                     //s.SendTo(sendData, sendData.Length, SocketFlags.None, anyIP);
-                     
-
-                    cliente.Send(sendData,sendData.Length);
+                    cliente.Send(byteImg, byteImg.Length);
                     Debug.Log("Se mandó.");
-                    
                 }
                 cont--;
             }
@@ -153,7 +165,13 @@ namespace Server_CSharp
         {
 
             client = new UdpClient(puerto);
-            anyIP = new IPEndPoint(IPAddress.Any, puerto);
+            byte[] address = new byte[4];
+            address[0] = 192;
+            address[1] = 162;
+            address[2] = 1;
+            address[3] = 34;
+            IPAddress a = new IPAddress(address);
+            anyIP = new IPEndPoint(a, puerto);
 
             Debug.Log(""+ puerto +"_________"+ anyIP.Address);
            
