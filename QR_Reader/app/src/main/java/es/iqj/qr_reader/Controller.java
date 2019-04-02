@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,7 +58,6 @@ public class Controller extends Activity  {
     Intent activityThatCalled;
 
     RelativeLayout myLayout = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +214,7 @@ public class Controller extends Activity  {
         });
 
 
-        receive_image = new Receive_Image(ip,Integer.parseInt(puerto));
+        receive_image = new Receive_Image(ip,Integer.parseInt(puerto),this);
         receive_image.start();
 
         udpClientHandler = new UdpClientHandler(this);
@@ -235,6 +236,12 @@ public class Controller extends Activity  {
     }
 
 
+    public void setByteMap(BitmapDrawable bit){
+        myLayout.setBackground(bit);
+    }
+
+
+
     public static class UdpClientHandler extends Handler {
         public static final int UPDATE_STATE = 0;
         public static final int UPDATE_MSG = 1;
@@ -245,9 +252,6 @@ public class Controller extends Activity  {
             super();
             this.parent = parent;
         }
-
-
-
     }
 
 
