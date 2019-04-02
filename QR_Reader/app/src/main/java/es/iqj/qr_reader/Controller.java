@@ -221,8 +221,8 @@ public class Controller extends Activity  {
     }
 
 
-    public void onDestroy(){
-        super.onDestroy();
+    public void onPause(){
+        super.onPause();
         udpClientThread.setRunning(false);
         receive_image.setRunning(false);
         try {
@@ -235,7 +235,7 @@ public class Controller extends Activity  {
         System.out.print("He terminado");
     }
 
-
+    //cambiamos la img de id="fondo" en este metodo
     public void setByteMap(BitmapDrawable bit){
         myLayout.setBackground(bit);
     }

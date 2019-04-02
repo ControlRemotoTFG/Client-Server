@@ -10,6 +10,9 @@ import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.google.android.gms.common.images.internal.ImageUtils;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,21 +22,19 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class Receive_Image extends Thread{
-    Context cont;
-    DatagramSocket socket;
-    InetAddress address;
-    byte num;
-    DatagramPacket packet;
+
+    //Reguladores de la conexión
     String dstAddress;
     int port;
-    private boolean running;
-    Controller control;
-    BitmapDrawable bit = null;
+
+    private boolean running;//boolean de control del thread
+    Controller control;//recibimos la activity
+
+
     public Receive_Image(String addr, int port,Controller control ){
         dstAddress = addr;
         this.port = port;
         this.control = control;
-
     }
 
     public void setRunning(boolean running){
@@ -55,14 +56,17 @@ public class Receive_Image extends Thread{
         while(running) {
             try {
                 Bitmap bitmap;
+                //el tamaño maximo que podemos recibir
                 byte[] message = new byte[32768];
                 DatagramPacket receivePacket = new DatagramPacket(message, message.length);
+                //recibimos la img del pc
                 serversocket.receive(receivePacket);
-
+                //creamos el bitmap desde el byteArray que recibimos
                 bitmap = BitmapFactory.decodeByteArray(message,0,message.length);
-                final BitmapDrawable bit = new BitmapDrawable(bitmap);
 
-                //control.setByteMap(bit);//ESTO DA FALLO YA QUE SIGUES ESTANDO EN ESTE THREAD CUANDO TIENES QUE HACERLO EN EL MAIN THREAD
+                //creamos el bitmapDrawable que luego se pasara a la mainThread
+                //para poder modificar la img que creamos en el manifest
+                final BitmapDrawable bit = new BitmapDrawable(bitmap);
                 control.runOnUiThread(new Runnable() {
 
                     @Override
@@ -71,8 +75,7 @@ public class Receive_Image extends Thread{
                     }
                 });
 
-
-                System.out.println("VIVA EL VINO");
+                //System.out.println("VIVA EL VINO");//VIVA EL VINO!!!
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -30,7 +30,7 @@ public class Server : MonoBehaviour
     }
     void LateUpdate()
     {
-        if (s != null)
+        if (s != null && s.checkSending())
         {
             camera.Render();
             Texture2D texture = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
@@ -38,8 +38,7 @@ public class Server : MonoBehaviour
             RenderTexture.active = camera.targetTexture;
             texture.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0, false);
             texture.Compress(false);
-            byte[] Bytes2Send = texture.GetRawTextureData();
-            Debug.Log(Bytes2Send.Length);
+            byte[] Bytes2Send = texture.GetRawTextureData(); 
             s.setTexture2D(ref Bytes2Send);
         }
     }
@@ -133,13 +132,17 @@ namespace Server_CSharp
         {
             send = true;
         }
+        public bool checkSending()
+        {
+            return sending;
+        }
         // send thread
         private void SendData() {
 
             System.Net.Sockets.UdpClient cliente = new System.Net.Sockets.UdpClient();
 
             sendData = new byte[10];
-            int cont = 9;
+            
             while (!conectado) ;
             cliente.Connect(anyIP.Address,puerto );
             while (sending)
@@ -147,13 +150,10 @@ namespace Server_CSharp
                 if (send)
                 {
                     send = false;
-                    //s.SendTo(sendData, sendData.Length, SocketFlags.None, anyIP);
-                    Debug.Log(byteImg.Length);
-
                     cliente.Send(byteImg, byteImg.Length);
                     Debug.Log("Se mandó.");
                 }
-                cont--;
+                
             }
             //fin de comunicación
             sendData[0] = 1;
@@ -190,7 +190,9 @@ namespace Server_CSharp
                     conectado = true;//activamos mandar img
                     if (data[0] == 2)
                     {
+                        Debug.Log("Terminando las conexiones");
                         continua = false;
+                        sending = false;
                     }
                     else
                     {
