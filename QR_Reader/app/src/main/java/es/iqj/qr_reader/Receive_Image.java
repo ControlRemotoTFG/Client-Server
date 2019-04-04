@@ -10,9 +10,7 @@ import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.google.android.gms.common.images.internal.ImageUtils;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,6 +18,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+
 
 public class Receive_Image extends Thread{
 
@@ -62,7 +61,10 @@ public class Receive_Image extends Thread{
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
                 //creamos el bitmap desde el byteArray que recibimos
-                bitmap = BitmapFactory.decodeByteArray(message,0,message.length);
+                BitmapFactory.Options options = new  BitmapFactory.Options();
+                options.outHeight = 1920;
+                options.outWidth = 1080;
+                bitmap = BitmapFactory.decodeByteArray(message,0,message.length,options);
 
                 //creamos el bitmapDrawable que luego se pasara a la mainThread
                 //para poder modificar la img que creamos en el manifest

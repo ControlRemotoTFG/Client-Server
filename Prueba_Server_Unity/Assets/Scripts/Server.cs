@@ -37,9 +37,11 @@ public class Server : MonoBehaviour
             //Read the pixels in the Rect starting at 0,0 and ending at the screen's width and height
             RenderTexture.active = camera.targetTexture;
             texture.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0, false);
-            texture.Compress(false);
-            byte[] Bytes2Send = texture.GetRawTextureData(); 
+            //texture.Compress(false);
+            byte[] Bytes2Send = texture.EncodeToPNG();
+            //byte[] Bytes2Send = texture.GetRawTextureData(); 
             s.setTexture2D(ref Bytes2Send);
+            Destroy(texture);
         }
     }
     public void IniciarServer()
