@@ -61,10 +61,8 @@ public class Receive_Image extends Thread{
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
                 //creamos el bitmap desde el byteArray que recibimos
-                BitmapFactory.Options options = new  BitmapFactory.Options();
-                options.outHeight = 1920;
-                options.outWidth = 1080;
-                bitmap = BitmapFactory.decodeByteArray(message,0,message.length,options);
+
+                bitmap = BitmapFactory.decodeByteArray(message,0,message.length);
 
                 //creamos el bitmapDrawable que luego se pasara a la mainThread
                 //para poder modificar la img que creamos en el manifest
