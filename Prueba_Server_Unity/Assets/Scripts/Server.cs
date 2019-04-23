@@ -32,6 +32,8 @@ public class Server : MonoBehaviour
     {
         if (s != null && s.checkSending())
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             camera.Render();
             Texture2D texture = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
             //Read the pixels in the Rect starting at 0,0 and ending at the screen's width and height
@@ -42,6 +44,10 @@ public class Server : MonoBehaviour
             //byte[] Bytes2Send = texture.GetRawTextureData(); 
             s.setTexture2D(ref Bytes2Send);
             Destroy(texture);
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Debug.Log(elapsedMs + " ms en comprimir img.");
         }
     }
     public void IniciarServer()
@@ -147,13 +153,13 @@ namespace Server_CSharp
             
             while (!conectado) ;
             cliente.Connect(anyIP.Address,puerto );
+            Debug.Log(byteImg.Length);
             while (sending)
             {
                 if (send)
                 {
                     send = false;
-                    cliente.Send(byteImg, byteImg.Length);
-                    Debug.Log("Se mandó.");
+                    cliente.Send(byteImg, byteImg.Length); //este mensaje tiene de latencia 5ms aprox cuando hace ping
                 }
                 
             }
@@ -182,8 +188,6 @@ namespace Server_CSharp
 
                 try
                 {
-                   
-
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante

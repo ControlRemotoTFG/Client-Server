@@ -56,12 +56,12 @@ public class Receive_Image extends Thread{
             try {
                 Bitmap bitmap;
                 //el tamaño maximo que podemos recibir
-                byte[] message = new byte[32768];
+                byte[] message = new byte[1900];//entre 1900-1700
                 DatagramPacket receivePacket = new DatagramPacket(message, message.length);
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
                 //creamos el bitmap desde el byteArray que recibimos
-
+                long statTime = System.nanoTime();
                 bitmap = BitmapFactory.decodeByteArray(message,0,message.length);
 
                 //creamos el bitmapDrawable que luego se pasara a la mainThread
@@ -74,9 +74,10 @@ public class Receive_Image extends Thread{
                         control.setByteMap(bit);
                     }
                 });
-
-                //System.out.println("VIVA EL VINO");//VIVA EL VINO!!!
-
+                long endTime = System.nanoTime();
+                long timeElapsed = endTime - statTime;
+                System.out.println((timeElapsed/1000000) + " ms time descompressing img");
+                //TOTAL = 13-15 MS MEDIA
             } catch (IOException e) {
                 e.printStackTrace();
             }
