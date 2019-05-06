@@ -16,6 +16,7 @@ public class Server : MonoBehaviour
     string IP;
     public System.Int32 Port;
     UDPSocket s;
+    public QR qr;
     public PlayerController player;
     public Camera camera;
     // Use this for initialization
@@ -28,6 +29,7 @@ public class Server : MonoBehaviour
     {
         return Port;
     }
+
     void LateUpdate()
     {
         if (s != null && s.checkSending())
@@ -55,7 +57,12 @@ public class Server : MonoBehaviour
         s = new UDPSocket();
         Debug.Log("New hecho.");
         IP = "192.168.1.33";
-        s.init(IP, Port, player);
+        s.init(IP, Port, player,qr);
+    }
+
+    public void endQRShow()
+    {
+        qr.endQRShow();
     }
 
     private string GetIp()
@@ -100,12 +107,14 @@ namespace Server_CSharp
         bool continua = true;
         bool sending = true;
         bool send = false;
+        QR qr;
         IPEndPoint anyIP;
         bool conectado = false;
         byte[] byteImg = new byte[200];
         // init
-        public void init(String ip, int port, PlayerController p)
+        public void init(String ip, int port, PlayerController p, QR qr)
         {
+            this.qr = qr;
             Debug.Log("UDPSend.init()");
             player = p;
             puerto = port;
@@ -144,6 +153,10 @@ namespace Server_CSharp
         {
             return sending;
         }
+        public bool conected()
+        {
+            return conectado;
+        }
         // send thread
         private void SendData() {
 
@@ -154,6 +167,8 @@ namespace Server_CSharp
             while (!conectado) ;
             cliente.Connect(anyIP.Address,puerto );
             Debug.Log(byteImg.Length);
+            qr.endQRShow();//end the QR
+            Debug.Log("Fin del QR");
             while (sending)
             {
                 if (send)

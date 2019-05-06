@@ -7,21 +7,27 @@ public class QR : MonoBehaviour
 {
     Texture2D myQR;
     public Server server;
+    GameObject button;
+    bool conected = false;
     // Start is called before the first frame update
      public void Generate_QR()
     {
         System.Int32 port = server.getPort();
-        string ip = "192.168.1.37";
+        string ip = "192.168.1.33";
 
         myQR = generateQR(port + ":" + ip);
     }
 
+    public void endQRShow()
+    {
+        conected = true;
+    }
  
     void OnGUI()
     {
 
        
-        if (GUI.Button(new Rect((Screen.width/2) - 150, (Screen.height/2) - 150, 256, 256), myQR, GUIStyle.none)) { }
+        if (!conected && GUI.Button(new Rect((Screen.width/2) - 150, (Screen.height/2) - 150, 256, 256), myQR, GUIStyle.none)) { }
 
     }
 private static Color32[] Encode(string textForEncoding, int width, int height)

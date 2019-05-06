@@ -6,33 +6,9 @@
     android:padding="16dp"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:hint="dstAddress" />
-    <EditText
-        android:id="@+id/port"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:hint="dstPort" />
-    <Button
-        android:id="@+id/connect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Connect"/>
-
-    <TextView
-        android:id="@+id/received"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"/>
-
     <FrameLayout
         android:layout_width="376dp"
-        android:layout_height="527dp">
+        android:layout_height="700dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
