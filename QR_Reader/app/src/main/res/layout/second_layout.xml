@@ -7,8 +7,8 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="376dp"
-        android:layout_height="700dp">
+        android:layout_width="700dp"
+        android:layout_height="350dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
