@@ -21,6 +21,8 @@ public class LibraryDevelopment
     UdpClient client;
     IPEndPoint anyIP;
     byte[] address = new byte[4];
+    List<ServerListener> listeners;
+
 
     // Control Variable
     volatile bool reciving = true; // reciving thread is active
@@ -29,8 +31,16 @@ public class LibraryDevelopment
     volatile bool conectedd = false; // control for when the active conection has started
 
     // Image texture allocator
-    byte[] byteImg = new byte[200]; 
+    byte[] byteImg = new byte[200];
 
+    /// <summary>
+    /// Adds a new listener to the server list.
+    /// </summary>
+    /// <param name="listener">ServerListener that wants to be updated of the input of the phone</param>
+    public void AddServerListener(ServerListener listener)
+    {
+        listeners.Add(listener);
+    }
 
     public void setTexture2D(ref byte[] arrayImg)
     {
@@ -99,6 +109,7 @@ public class LibraryDevelopment
 
     /// <summary>
     /// Starts the main thread that recives the input from the phone
+    /// and give the input to the ServerListeners
     /// </summary>
     /// <returns>Returns if the start has been succesfully started</returns>
     public bool StartReciving()
@@ -198,41 +209,44 @@ public class LibraryDevelopment
                 }
                 else
                 {
-                    if (data[0] == 1)
+                    foreach (ServerListener listener in listeners)
                     {
-                        player.SetByteData(0, 1);
+                        if (data[0] == 1)
+                        {
+                            listener.SetByteData(0, 1);
 
+                        }
+                        else
+                            listener.SetByteData(0, 0);
+                        if (data[1] == 1)
+                            listener.SetByteData(1, 1);
+                        else
+                            listener.SetByteData(1, 0);
+                        if (data[2] == 1)
+                            listener.SetByteData(2, 1);
+                        else
+                            listener.SetByteData(2, 0);
+                        if (data[3] == 1)
+                            listener.SetByteData(3, 1);
+                        else
+                            listener.SetByteData(3, 0);
+                        if (data[4] == 1)
+                            listener.SetByteData(4, 1);
+                        else
+                            listener.SetByteData(4, 0);
+                        if (data[5] == 1)
+                            listener.SetByteData(5, 1);
+                        else
+                            listener.SetByteData(5, 0);
+                        if (data[6] == 1)
+                            listener.SetByteData(6, 1);
+                        else
+                            listener.SetByteData(6, 0);
+                        if (data[7] == 1)
+                            listener.SetByteData(7, 1);
+                        else
+                            listener.SetByteData(7, 0);
                     }
-                    else
-                        player.SetByteData(0, 0);
-                    if (data[1] == 1)
-                        player.SetByteData(1, 1);
-                    else
-                        player.SetByteData(1, 0);
-                    if (data[2] == 1)
-                        player.SetByteData(2, 1);
-                    else
-                        player.SetByteData(2, 0);
-                    if (data[3] == 1)
-                        player.SetByteData(3, 1);
-                    else
-                        player.SetByteData(3, 0);
-                    if (data[4] == 1)
-                        player.SetByteData(4, 1);
-                    else
-                        player.SetByteData(4, 0);
-                    if (data[5] == 1)
-                        player.SetByteData(5, 1);
-                    else
-                        player.SetByteData(5, 0);
-                    if (data[6] == 1)
-                        player.SetByteData(6, 1);
-                    else
-                        player.SetByteData(6, 0);
-                    if (data[7] == 1)
-                        player.SetByteData(7, 1);
-                    else
-                        player.SetByteData(7, 0);
                 }
             }
             catch (Exception err)
@@ -241,4 +255,12 @@ public class LibraryDevelopment
             }
         }
     }
+}
+
+/// <summary>
+/// Interface for the server listener
+/// </summary>
+public interface ServerListener
+{
+    void SetByteData(int indice, byte valor);
 }
