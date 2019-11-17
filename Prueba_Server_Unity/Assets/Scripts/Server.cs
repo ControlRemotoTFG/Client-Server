@@ -55,7 +55,6 @@ public class Server : MonoBehaviour
     public void IniciarServer()
     {          
         s = new UDPSocket();
-        Debug.Log("New hecho.");
         IP = "192.168.1.33";
         s.init(IP, Port, player,qr);
     }
