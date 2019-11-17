@@ -8,7 +8,7 @@ using System;
 /// <summary>
 /// Class for managing sending images and reciving input from a phone through a Internet Connection
 /// </summary>
-public class LibreryDevelopment
+public class LibraryDevelopment
 {
     // Thread Managment
     Thread receiveThread;

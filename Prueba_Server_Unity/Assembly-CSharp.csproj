@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\GameManager.cs" />
-    <Compile Include="Assets\Scripts\LibreryDevelopment.cs" />
+    <Compile Include="Assets\Scripts\LibraryDevelopment.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\QR.cs" />
     <Compile Include="Assets\Scripts\Server.cs" />
