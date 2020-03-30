@@ -8,6 +8,7 @@ using System.Text;
 using Server_CSharp;
 using System.Threading;
 using UnityEngine.UI;
+using System.Net.NetworkInformation;
 
 
 public class Server : MonoBehaviour
@@ -21,10 +22,7 @@ public class Server : MonoBehaviour
     public Camera camera;
     // Use this for initialization
     WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
-    public string getIP()
-    {
-        return IP;
-    }
+
     public System.Int32 getPort()
     {
         return Port;
@@ -48,15 +46,13 @@ public class Server : MonoBehaviour
             Destroy(texture);
 
             watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Debug.Log(elapsedMs + " ms en comprimir img.");
         }
     }
     public void IniciarServer()
     {          
         s = new UDPSocket();
-        IP = "192.168.1.33";
-        s.init(IP, Port, player,qr);
+        s.init(Port,qr);
+        s.AddListener(player);
     }
 
     public void endQRShow()
@@ -64,21 +60,29 @@ public class Server : MonoBehaviour
         qr.endQRShow();
     }
 
-    private string GetIp()
+    public static string GetIP()
     {
-        IPHostEntry host;
-        string localIP = "?";
-        host = Dns.GetHostEntry(Dns.GetHostName());
+        string output = "";
 
-        foreach(IPAddress ip in host.AddressList)
+        foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
         {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            NetworkInterfaceType _type1 = NetworkInterfaceType.Wireless80211;
+            NetworkInterfaceType _type2 = NetworkInterfaceType.Ethernet;
 
-            if (ip.AddressFamily.ToString() == "InterNetwork")
+            if ((item.NetworkInterfaceType == _type1 || item.NetworkInterfaceType == _type2) && item.OperationalStatus == OperationalStatus.Up)
+#endif 
             {
-                localIP = ip.ToString();
+                foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        output = ip.Address.ToString();
+                    }
+                }
             }
         }
-        return localIP;
+        return output;
     }
 
     public void CerrarServer()
@@ -94,6 +98,15 @@ public class Server : MonoBehaviour
 
 namespace Server_CSharp
 {
+    public interface InputMovileInterface
+    {
+        void RecieveTouch(int x, int y);
+
+        void EndOfConection();
+
+        void ScreenSize(int width, int height);
+    }
+
     public class UDPSocket
     {
         Thread receiveThread;
@@ -102,7 +115,6 @@ namespace Server_CSharp
         UdpClient client;
         byte[] data;
         byte[] sendData;
-        PlayerController player;
         bool continua = true;
         bool sending = true;
         bool send = false;
@@ -110,13 +122,13 @@ namespace Server_CSharp
         IPEndPoint anyIP;
         bool conectado = false;
         byte[] byteImg = new byte[200];
+        List<InputMovileInterface> listeners;
         // init
-        public void init(String ip, int port, PlayerController p, QR qr)
+        public void init(int port, QR qr)
         {
             this.qr = qr;
-            Debug.Log("UDPSend.init()");
-            player = p;
             puerto = port;
+            listeners = new List<InputMovileInterface>();
             receiveThread = new Thread(
                 new ThreadStart(ReceiveData));
             receiveThread.IsBackground = true;
@@ -126,6 +138,12 @@ namespace Server_CSharp
             sendThread.IsBackground = true;
             sendThread.Start();
         }
+
+        public void AddListener(InputMovileInterface i)
+        {
+            listeners.Add(i);
+        }
+
         public void setTexture2D(ref byte[] arrayImg)
         {
             byteImg = arrayImg;
@@ -164,10 +182,8 @@ namespace Server_CSharp
             sendData = new byte[10];
             
             while (!conectado) ;
-            cliente.Connect(anyIP.Address,puerto );
-            Debug.Log(byteImg.Length);
+            cliente.Connect(anyIP.Address,puerto);
             qr.endQRShow();//end the QR
-            Debug.Log("Fin del QR");
             while (sending)
             {
                 if (send)
@@ -185,18 +201,31 @@ namespace Server_CSharp
         // receive thread
         private void ReceiveData()
         {
-
+            
             client = new UdpClient(puerto);
-            byte[] address = new byte[4];
-            address[0] = 192;
-            address[1] = 162;
-            address[2] = 1;
-            address[3] = 34;
-            IPAddress a = new IPAddress(address);
+            IPAddress a = GetAddress();
             anyIP = new IPEndPoint(a, puerto);
 
             Debug.Log(""+ puerto +"_________"+ anyIP.Address);
-           
+
+            data = client.Receive(ref anyIP);//recieve screen
+            foreach (InputMovileInterface i in listeners)
+            {
+                int pos0 = data[0];
+                int pos1 = (data[1] << 4);
+                int pos2 = (data[2] << 8);
+                int pos3 = (data[3] << 16);
+
+                int pos4 = data[4];
+                int pos5 = (data[5] << 4);
+                int pos6 = (data[6] << 8);
+                int pos7 = (data[7] << 16);
+
+                int x = pos0 + pos1 + pos2 + pos3;
+                int y = pos4 + pos5 + pos6 + pos7;
+                i.ScreenSize(x, y);
+            }
+            conectado = true;//activamos mandar img
             while (continua)
             {
 
@@ -205,53 +234,34 @@ namespace Server_CSharp
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante
+                    
+                    Debug.Log("Waiting Finish");
+                    if(data.Length > 1)
+                    {
+                        foreach (InputMovileInterface i in listeners)
+                        {
+                            int pos0 = data[0];
+                            int pos1 = (data[1] << 4);
+                            int pos2 = (data[2] << 8);
+                            int pos3 = (data[3] << 16);
 
-                    Debug.Log("" + puerto + "_________" + anyIP.Address);
-                    conectado = true;//activamos mandar img
-                    if (data[0] == 2)
+                            int pos4 = data[4];
+                            int pos5 = (data[5] << 4);
+                            int pos6 = (data[6] << 8);
+                            int pos7 = (data[7] << 16);
+
+                            int x = pos0 + pos1 + pos2 + pos3;
+                            int y = pos4 + pos5 + pos6 + pos7;
+                            i.RecieveTouch(x, y);
+                        }
+                    }
+                    else if(data[0] == 2)
                     {
                         Debug.Log("Terminando las conexiones");
                         continua = false;
                         sending = false;
                     }
-                    else
-                    {
-                        if (data[0] == 1)
-                        {
-                            player.SetByteData(0, 1);
-                            
-                        }
-                        else
-                            player.SetByteData(0, 0);
-                        if (data[1] == 1)
-                            player.SetByteData(1, 1);
-                        else
-                            player.SetByteData(1, 0);
-                        if (data[2] == 1)
-                            player.SetByteData(2, 1);
-                        else
-                            player.SetByteData(2, 0);
-                        if (data[3] == 1)
-                            player.SetByteData(3, 1);
-                        else
-                            player.SetByteData(3, 0);
-                        if (data[4] == 1)
-                            player.SetByteData(4, 1);
-                        else
-                            player.SetByteData(4, 0);
-                        if (data[5] == 1)
-                            player.SetByteData(5, 1);
-                        else
-                            player.SetByteData(5, 0);
-                        if (data[6] == 1)
-                            player.SetByteData(6, 1);
-                        else
-                            player.SetByteData(6, 0);
-                        if (data[7] == 1)
-                            player.SetByteData(7, 1);
-                        else
-                            player.SetByteData(7, 0);
-                    }
+
                 }
                 catch (Exception err)
                 {
@@ -259,7 +269,33 @@ namespace Server_CSharp
                     break;
                 }
             }
-        } 
+            foreach (InputMovileInterface i in listeners)
+                i.EndOfConection();
+        }
+
+        private IPAddress GetAddress()
+        {
+
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+                NetworkInterfaceType _type1 = NetworkInterfaceType.Wireless80211;
+                NetworkInterfaceType _type2 = NetworkInterfaceType.Ethernet;
+
+                if ((item.NetworkInterfaceType == _type1 || item.NetworkInterfaceType == _type2) && item.OperationalStatus == OperationalStatus.Up)
+#endif
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            return ip.Address;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
 

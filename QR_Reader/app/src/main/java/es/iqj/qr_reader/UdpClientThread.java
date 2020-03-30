@@ -1,5 +1,4 @@
 package es.iqj.qr_reader;
-import android.os.Message;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,19 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import static java.lang.System.out;
+
 public class UdpClientThread extends Thread{
-
-    //to send to server.
-    byte _up;
-    byte _down;
-    byte _left;
-    byte _right;
-    byte _A;
-    byte _B;
-    byte _START;
-    byte _SELECT;
-
 
     boolean ready = false;
 
@@ -30,121 +18,88 @@ public class UdpClientThread extends Thread{
 
     DatagramSocket socket;
     InetAddress address;
-
-    public UdpClientThread(String addr, int port, Controller.UdpClientHandler handler ,
-                           byte up,
-                           byte down,
-                           byte left,
-                           byte right,
-                           byte A,
-                           byte B,
-                           byte START,
-                           byte SELECT) {
+    int xPos;
+    int yPos;
+    int width;
+    int height;
+    public UdpClientThread(String addr, int port, Controller.UdpClientHandler handler ,int x, int y, int widthScreen, int heightScreen){
         super();
         dstAddress = addr;
         dstPort = port;
         this.handler = handler;
-
-        _up = up;
-        _down =down;
-        _left = left;
-        _right = right;
-        _A = A;
-        _B = B;
-        _START = START;
-        _SELECT = SELECT;
-
-
-
-
+        xPos = x;
+        yPos = y;
+        width = widthScreen;
+        height = heightScreen;
     }
 
     public void setRunning(boolean running){
         this.running = running;
     }
 
-    private void sendState(String state){
-        handler.sendMessage(
-                Message.obtain(handler,
-                        Controller.UdpClientHandler.UPDATE_STATE, state));
-    }
-
-
-    public void clicked(String addr, int port,
-                        byte up,
-                        byte down,
-                        byte left,
-                        byte right,
-                        byte A,
-                        byte B,
-                        byte START,
-                        byte SELECT){
-
-        dstAddress = addr;
-        dstPort = port;
-
-        _up = up;
-        _down =down;
-        _left = left;
-        _right = right;
-        _A = A;
-        _B = B;
-        _START = START;
-        _SELECT = SELECT;
+    public void clicked(int x, int y){
+        xPos = x;
+        yPos = y;
         ready = true;
-
     }
 
 
     @Override
     public void run() {
-
-
-        running = true;
-        /*try {
+        try {
             socket = new DatagramSocket();
-        }
-        catch (SocketException e){
+        } catch (SocketException e) {
             e.printStackTrace();
-        }*/
+        }
+        byte[] buf = new byte[8];
+        running = true;
+        try {
+            address = InetAddress.getByName(dstAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        buf[0] = (byte)(width & (0x000000FF));
+        buf[1] = (byte)((width & (0x0000FF00)) >> 4);
+        buf[2] = (byte)((width & (0x00FF0000)) >> 8);
+        buf[3] = (byte)((width & (0xFF000000)) >> 16);
+
+        buf[4] = (byte)(height & (0x000F));
+        buf[5] = (byte)((height & (0x00F0)) >> 4);
+        buf[6] = (byte)((height & (0x0F00)) >> 8);
+        buf[7] = (byte)((height & (0xF000)) >> 16);
+
+        DatagramPacket packet =
+                new DatagramPacket(buf, buf.length, address, dstPort);
+
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while(running) {
             if(ready) {
                 try {
                     ready = false;
-                    socket = new DatagramSocket();
+
                     address = InetAddress.getByName(dstAddress);
                     System.out.println(address);
                     // send request
-                    byte[] buf = new byte[256];
 
-                    buf[0] = _up;
-                    buf[1] = _down;
-                    buf[2] = _left;
-                    buf[3] = _right;
+                    buf[0] = (byte)(xPos & (0x000000FF));
+                    buf[1] = (byte)((xPos & (0x0000FF00)) >> 4);
+                    buf[2] = (byte)((xPos & (0x00FF0000)) >> 8);
+                    buf[3] = (byte)((xPos & (0xFF000000)) >> 16);
+
+                    buf[4] = (byte)(yPos & (0x000F));
+                    buf[5] = (byte)((yPos & (0x00F0)) >> 4);
+                    buf[6] = (byte)((yPos & (0x0F00)) >> 8);
+                    buf[7] = (byte)((yPos & (0xF000)) >> 16);
 
 
-                    buf[4] = _A;
-                    buf[5] = _B;
-                    buf[6] = _START;
-                    buf[7] = _SELECT;
+                    System.out.println(yPos + "  "+ buf[4] + "  " + buf[5]+ "  " + buf[6]+ "  " + buf[7]);
 
-                    System.out.println(address + "_______________" + dstPort);
-
-                    DatagramPacket packet =
-                            new DatagramPacket(buf, buf.length, address, dstPort);
                     socket.send(packet);
 
-
-
-                    //client wait to response for the message
-
-            /*// get response
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-            String line = new String(packet.getData(), 0, packet.getLength());
-            handler.sendMessage(
-                    Message.obtain(handler, MainActivity.UdpClientHandler.UPDATE_MSG, line));
-            */
                 } catch (SocketException e) {
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
@@ -155,12 +110,12 @@ public class UdpClientThread extends Thread{
             }
         }
 
-        byte[] buf = new byte[8];
+        byte[] buff = new byte[1];
 
-        buf[0] = 2;
+        buff[0] = 2;
 
-        DatagramPacket packet =
-                new DatagramPacket(buf, buf.length, address, dstPort);
+        packet =
+                new DatagramPacket(buff, buff.length, address, dstPort);
 
         try {
             socket.send(packet);

@@ -2,40 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, Server_CSharp.InputMovileInterface {
+    /*Rect up = new Rect(201, 52, 171, 114);
+    Rect down = new Rect(201, 288, 171, 114);
+    Rect left = new Rect(55, 175, 171, 114);
+    Rect right = new Rect(363, 166, 171, 114);  X Y ANCHO ALTO
 
-    byte[] data;
+    Rect A = new Rect(480, 348, 358, 260);
+    Rect B = new Rect(611, 689, 347, 239);
+    Rect select = new Rect(13, 818, 446, 74);
+    Rect start = new Rect(40, 626, 401, 93);*/
 
-    void Start()
+    int ScreenW;
+    int ScreenH;
+
+
+    public void RecieveTouch(int x, int y)
     {
-        data = new byte[8];
-        data[0] = data[1] = data[2] = data[3] = data[4] = data[5] = data[6] = data[7] = 0 ;
+        Debug.Log("Moving to " + x + ","+ y);
     }
-    public void SetByteData(int indice, byte valor)
-    {
-        data[indice] = valor;
 
+    public void EndOfConection()
+    {
+        Debug.Log("F");
     }
-	 void Update () {
-        transform.Translate(0, 0, 0);
-        if (data != null)
-        {
-            if (data[0] == 1)
-                transform.Translate(0, 1, 0);
-            if (data[1] == 1)
-                transform.Translate(0, -0.1f, 0);
-            if (data[2] == 1)
-                transform.Translate(-0.1f, 0, 0);
-            if (data[3] == 1)
-                transform.Translate(1, 0, 0);
-            if (data[4] == 1)
-                transform.Translate(0, 0.1f, 0);
-            if (data[5] == 1)
-                transform.Translate(0, -0.1f, 0);
-            if (data[6] == 1)
-                transform.Translate(-0.1f, 0, 0);
-            if (data[7] == 1)
-                transform.Translate(0.1f, 0, 0);
-        }
+
+    public void ScreenSize(int width, int height)
+    {
+        Debug.Log("Screen " + width + "," + height);
+        ScreenW = width;
+        ScreenH = height;
     }
 }

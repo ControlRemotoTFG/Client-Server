@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -20,10 +21,6 @@ import android.widget.TextView;
 
 
 public class Controller extends Activity  {
-
-
-
-
 
     UdpClientHandler udpClientHandler;
     UdpClientThread udpClientThread;
@@ -111,6 +108,7 @@ public class Controller extends Activity  {
                     //TODO: get x and y coordenates and calculate wich hotspot has been touched
                     x = event.getX();
                     y = event.getY();
+
                     System.out.println(x);
                     System.out.println(y);
 
@@ -136,32 +134,22 @@ public class Controller extends Activity  {
 
 
                     if(udpClientThread == null) {
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                        int height = displayMetrics.heightPixels;
+                        int width = displayMetrics.widthPixels;
                         udpClientThread = new UdpClientThread(
                                 ip,
                                 Integer.parseInt(puerto),
                                 udpClientHandler,
-                                _up,
-                                _down,
-                                _left,
-                                _right,
-                                _A,
-                                _B,
-                                _START,
-                                _SELECT);
+                                (int)x,
+                                (int)y,
+                                width,
+                                height);
                         udpClientThread.start();
                     }
                     else
-                        udpClientThread.clicked(
-                                ip,
-                                Integer.parseInt(puerto),
-                                _up,
-                                _down,
-                                _left,
-                                _right,
-                                _A,
-                                _B,
-                                _START,
-                                _SELECT);
+                        udpClientThread.clicked((int)x,(int)y);
                 }
 
                 //LEVANTAR
@@ -181,32 +169,22 @@ public class Controller extends Activity  {
 
 
                     if(udpClientThread == null) {
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                        int height = displayMetrics.heightPixels;
+                        int width = displayMetrics.widthPixels;
                         udpClientThread = new UdpClientThread(
-                               ip,
+                                ip,
                                 Integer.parseInt(puerto),
                                 udpClientHandler,
-                                _up,
-                                _down,
-                                _left,
-                                _right,
-                                _A,
-                                _B,
-                                _START,
-                                _SELECT);
+                                (int)x,
+                                (int)y,
+                                width,
+                                height);
                         udpClientThread.start();
                     }
                     else
-                        udpClientThread.clicked(
-                                ip,
-                                Integer.parseInt(puerto),
-                                _up,
-                                _down,
-                                _left,
-                                _right,
-                                _A,
-                                _B,
-                                _START,
-                                _SELECT);
+                        udpClientThread.clicked((int)x,(int)y);
 
                 }
                 return true;

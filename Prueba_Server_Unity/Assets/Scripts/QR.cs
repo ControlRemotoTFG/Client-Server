@@ -13,7 +13,7 @@ public class QR : MonoBehaviour
      public void Generate_QR()
     {
         System.Int32 port = server.getPort();
-        string ip = "192.168.1.33";
+        string ip = Server.GetIP();
 
         myQR = generateQR(port + ":" + ip);
     }
