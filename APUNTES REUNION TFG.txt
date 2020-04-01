@@ -1,0 +1,18 @@
+Que preguntar hacer a los user test. Han notado que todo fuese fluido?, el feedback dado es suficiente?(en refente a la vibracion) Midamos latencias y preguntas indirectas
+con puntuaje del 1-4(podemos medir de 1-8 pero seria luego reducido a 4) y subir el GOOGLE FORUM este de drive el archivo con las latencias. Podemos medir todo de nuevo para saber
+como van los frames y demas. Medir trozo a trozo para que luego se puedan poner casos separados. Y darnos los pcs specs y y movil specs y wifi specs. Pedir informacion sobre
+de que juega como juega y a que juega. feedback de que backup player es. (Como idea se puede grabar la pantalla o grabar la traza q es mejor y luego poder reproducirla)
+Primero con teclas , mando(apuntar mando que es) y luego con el movil para puedan tener contraste.
+
+
+Para el multiplayer daria un userId a cada movil y cada metodo consumiria los eventos si el id es el q ellos usan.// esta bien
+
+
+Vibrar durante un X tiempo para dar feedback al pulsar en el movil// es muy interesante y hay q hacerlo
+
+
+Podemos ver si subirlo para web pero solo provisional.
+
+
+MANDAR PRIMER EXPERIMENTO A ESTOS, LUEGO A USERS PARA QUE PETE Y LUEGO YA EL BUENO.
+
