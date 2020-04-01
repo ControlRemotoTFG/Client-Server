@@ -100,11 +100,11 @@ namespace Server_CSharp
 {
     public interface InputMovileInterface
     {
-        void RecieveTouch(int x, int y);
+        bool RecieveTouch(int x, int y);
 
-        void EndOfConection();
+        bool EndOfConection();
 
-        void ScreenSize(int width, int height);
+        bool ScreenSize(int width, int height);
     }
 
     public class UDPSocket
@@ -208,23 +208,29 @@ namespace Server_CSharp
 
             Debug.Log(""+ puerto +"_________"+ anyIP.Address);
 
-            data = client.Receive(ref anyIP);//recieve screen
+            data = client.Receive(ref anyIP);//recieve screen size
+
+            // Get the size for the listener
+            int pos0 = data[0];
+            int pos1 = (data[1] << 4);
+            int pos2 = (data[2] << 8);
+            int pos3 = (data[3] << 16);
+
+            int pos4 = data[4];
+            int pos5 = (data[5] << 4);
+            int pos6 = (data[6] << 8);
+            int pos7 = (data[7] << 16);
+
+            int x = pos0 + pos1 + pos2 + pos3;
+            int y = pos4 + pos5 + pos6 + pos7;
             foreach (InputMovileInterface i in listeners)
             {
-                int pos0 = data[0];
-                int pos1 = (data[1] << 4);
-                int pos2 = (data[2] << 8);
-                int pos3 = (data[3] << 16);
-
-                int pos4 = data[4];
-                int pos5 = (data[5] << 4);
-                int pos6 = (data[6] << 8);
-                int pos7 = (data[7] << 16);
-
-                int x = pos0 + pos1 + pos2 + pos3;
-                int y = pos4 + pos5 + pos6 + pos7;
-                i.ScreenSize(x, y);
+                if (i.ScreenSize(x, y))//if the event is consumed we stop passing that event
+                    break;
             }
+
+
+
             conectado = true;//activamos mandar img
             while (continua)
             {
@@ -238,21 +244,23 @@ namespace Server_CSharp
                     Debug.Log("Waiting Finish");
                     if(data.Length > 1)
                     {
+                        //Get the position where the user clicked
+                        pos0 = data[0];
+                        pos1 = (data[1] << 4);
+                        pos2 = (data[2] << 8);
+                        pos3 = (data[3] << 16);
+
+                        pos4 = data[4];
+                        pos5 = (data[5] << 4);
+                        pos6 = (data[6] << 8);
+                        pos7 = (data[7] << 16);
+
+                        x = pos0 + pos1 + pos2 + pos3;
+                        y = pos4 + pos5 + pos6 + pos7;
                         foreach (InputMovileInterface i in listeners)
                         {
-                            int pos0 = data[0];
-                            int pos1 = (data[1] << 4);
-                            int pos2 = (data[2] << 8);
-                            int pos3 = (data[3] << 16);
-
-                            int pos4 = data[4];
-                            int pos5 = (data[5] << 4);
-                            int pos6 = (data[6] << 8);
-                            int pos7 = (data[7] << 16);
-
-                            int x = pos0 + pos1 + pos2 + pos3;
-                            int y = pos4 + pos5 + pos6 + pos7;
-                            i.RecieveTouch(x, y);
+                            if (i.RecieveTouch(x, y))//Pass the event, if its consumed we stop passing the event
+                                break;
                         }
                     }
                     else if(data[0] == 2)
@@ -270,7 +278,10 @@ namespace Server_CSharp
                 }
             }
             foreach (InputMovileInterface i in listeners)
-                i.EndOfConection();
+            {
+                if (i.EndOfConection())
+                    break;
+            }
         }
 
         private IPAddress GetAddress()

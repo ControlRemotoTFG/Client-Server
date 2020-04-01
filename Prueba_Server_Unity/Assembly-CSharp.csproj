@@ -69,19 +69,19 @@
     <Compile Include="Assets\Scripts\QR.cs" />
     <Compile Include="Assets\Scripts\Server.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -285,10 +285,10 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.18f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="zxing.unity">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Assets/zxing.unity.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Assets/zxing.unity.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server-664b0f8732e48449775789dc39e1d9297e09c79e/Prueba_Server_Unity/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Prueba_Server_Unity/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.18f1/Editor/Data/MonoBleedingEdge/lib/mono/unity/mscorlib.dll</HintPath>

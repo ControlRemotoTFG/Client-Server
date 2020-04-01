@@ -17,20 +17,23 @@ public class PlayerController : MonoBehaviour, Server_CSharp.InputMovileInterfac
     int ScreenH;
 
 
-    public void RecieveTouch(int x, int y)
+    public bool RecieveTouch(int x, int y)
     {
         Debug.Log("Moving to " + x + ","+ y);
+        return true;
     }
 
-    public void EndOfConection()
+    public bool EndOfConection()
     {
         Debug.Log("F");
+        return true;
     }
 
-    public void ScreenSize(int width, int height)
+    public bool ScreenSize(int width, int height)
     {
         Debug.Log("Screen " + width + "," + height);
         ScreenW = width;
         ScreenH = height;
+        return true;
     }
 }
