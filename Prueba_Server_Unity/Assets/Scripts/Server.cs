@@ -100,7 +100,7 @@ namespace Server_CSharp
 {
     public interface InputMovileInterface
     {
-        bool RecieveTouch(int x, int y);
+        bool RecieveTouch(int x, int y, ref bool vibrate);
 
         bool EndOfConection();
 
@@ -114,10 +114,10 @@ namespace Server_CSharp
         int puerto;
         UdpClient client;
         byte[] data;
-        byte[] sendData;
         bool continua = true;
         bool sending = true;
         bool send = false;
+        bool vibrate = false;
         QR qr;
         IPEndPoint anyIP;
         bool conectado = false;
@@ -179,13 +179,21 @@ namespace Server_CSharp
 
             System.Net.Sockets.UdpClient cliente = new System.Net.Sockets.UdpClient();
 
-            sendData = new byte[10];
+            
             
             while (!conectado) ;
             cliente.Connect(anyIP.Address,puerto);
             qr.endQRShow();//end the QR
             while (sending)
             {
+                if (vibrate)
+                {
+                    byte[] vibrateMessage = new byte[4];
+                    vibrateMessage[0] = 0;
+                    vibrateMessage[1] = 0;
+                    vibrate = false;
+                    cliente.Send(vibrateMessage, vibrateMessage.Length);
+                }
                 if (send)
                 {
                     send = false;
@@ -193,6 +201,7 @@ namespace Server_CSharp
                 }
                 
             }
+            byte[] sendData = new byte[1];
             //fin de comunicación
             sendData[0] = 1;
             cliente.Send(sendData, sendData.Length);
@@ -230,7 +239,7 @@ namespace Server_CSharp
             }
 
 
-
+            int f = 0;
             conectado = true;//activamos mandar img
             while (continua)
             {
@@ -240,7 +249,9 @@ namespace Server_CSharp
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante
-                    
+                    f++;
+                    if (f % 3 == 0)
+                        vibrate = true;
                     Debug.Log("Waiting Finish");
                     if(data.Length > 1)
                     {
@@ -259,8 +270,12 @@ namespace Server_CSharp
                         y = pos4 + pos5 + pos6 + pos7;
                         foreach (InputMovileInterface i in listeners)
                         {
-                            if (i.RecieveTouch(x, y))//Pass the event, if its consumed we stop passing the event
+                            bool v = false;
+                            if (i.RecieveTouch(x, y, ref v))//Pass the event, if its consumed we stop passing the event
+                            {
+                                vibrate = v;
                                 break;
+                            }
                         }
                     }
                     else if(data[0] == 2)

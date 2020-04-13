@@ -1,21 +1,16 @@
 package es.iqj.qr_reader;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.os.VibrationEffect;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.os.Vibrator;
 
 
 
@@ -28,29 +23,9 @@ public class Controller extends Activity  {
     //variables de botones
     float x =0;
     float y = 0;
-    byte _up =0;
-    byte _down =0;
-    byte _left =0;
-    byte _right =0;
-    byte _A =0;
-    byte _B =0;
-    byte _START =0;
-    byte _SELECT =0;
-
+    Vibrator v;
     String puerto = "";
     String ip = "";
-
-
-    //rectangulos de botones
-    Rect up = new Rect(201,52,171,114);
-    Rect down = new Rect(201,288,171,114);
-    Rect left = new Rect(55,175,171,114);
-    Rect right = new Rect(363,166,171,114);
-
-    Rect A = new Rect(480,348,358,260);
-    Rect B = new Rect(611,689,347,239);
-    Rect select = new Rect(13,818,446,74);
-    Rect start = new Rect(40,626,401,93);
 
     Intent activityThatCalled;
 
@@ -71,6 +46,7 @@ public class Controller extends Activity  {
         // Get the data that was sent
 
         String port_ip = activityThatCalled.getExtras().getString("token");
+        v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
         char index;
         puerto = "";
@@ -92,10 +68,6 @@ public class Controller extends Activity  {
 
         }
 
-
-
-
-
         myLayout = findViewById(R.id.fondo);
 
 
@@ -104,34 +76,9 @@ public class Controller extends Activity  {
             @Override
             public boolean onTouch(View v, MotionEvent event){
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
-
                     //TODO: get x and y coordenates and calculate wich hotspot has been touched
                     x = event.getX();
                     y = event.getY();
-
-                    System.out.println(x);
-                    System.out.println(y);
-
-                    //PULSAR
-
-                    if(up.pulsado((int)x,(int)y))
-                        _up = 1;
-                    if(down.pulsado((int)x,(int)y))
-                        _down = 1;
-                    if(left.pulsado((int)x,(int)y))
-                        _left = 1;
-                    if(right.pulsado((int)x,(int)y))
-                        _right = 1;
-                    if(A.pulsado((int)x,(int)y))
-                        _A = 1;
-                    if(B.pulsado((int)x,(int)y))
-                        _B = 1;
-                    if(start.pulsado((int)x,(int)y))
-                        _START = 1;
-                    if(select.pulsado((int)x,(int)y))
-                        _SELECT= 1;
-
-
 
                     if(udpClientThread == null) {
                         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -155,18 +102,6 @@ public class Controller extends Activity  {
                 //LEVANTAR
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
-
-
-                    _up = 0;
-                    _down = 0;
-                    _left = 0;
-                    _right = 0;
-                    _A = 0;
-                    _B = 0;
-                    _START = 0;
-                    _SELECT = 0;
-
-
 
                     if(udpClientThread == null) {
                         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -218,6 +153,11 @@ public class Controller extends Activity  {
         myLayout.setBackground(bit);
     }
 
+    public void VibrateTimer(int miliseconds){
+        //deprecated in API 26
+        v.vibrate(miliseconds);
+    }
+
 
 
     public static class UdpClientHandler extends Handler {
@@ -231,32 +171,5 @@ public class Controller extends Activity  {
             this.parent = parent;
         }
     }
-
-
-
-
-    // class Rect
-    // Clase para los botones que vamos a pulsar, detecta si se ha pulsado dicho Rect.
-    public class Rect{
-        Rect(int x,int y, int ancho, int alto){
-            _x=x;
-            _y=y;
-            _alto=alto;
-            _ancho=ancho;
-
-        }
-
-        boolean pulsado(int x, int y){
-
-            return x>=_x && x<=(_ancho + _x) && y>=_y && y<=(_alto + _y);
-        }
-
-        int _x;
-        int _y;
-        int _alto;
-        int _ancho;
-    }
-
-
 
 }
