@@ -33,6 +33,7 @@ public class Receive_Image extends Thread{
     public void run(){
         running = true;
         DatagramSocket serversocket=null;
+        int vibrateTime = 0;
         try {
              serversocket = new DatagramSocket(port);
              System.out.println("Holiwi__" + serversocket.getLocalSocketAddress() + "_____" + serversocket.getLocalPort());
@@ -42,6 +43,22 @@ public class Receive_Image extends Thread{
         {
             e.printStackTrace();
         }
+        // RECIVIMOS EL TIMEPO DE VIBRACION DESDE EL SERVER DEL PC
+        byte[] vibrationTimerMessage = new byte[4];//entre 1900-1700
+        DatagramPacket receiveTime = new DatagramPacket(vibrationTimerMessage, vibrationTimerMessage.length);
+        try {
+            serversocket.receive(receiveTime);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // DESCOMPONEMOS EN INT EL TIEMPO DADO POR EL PC Y LO ASIGNAMOS A VIBRATIONTIME
+        int a = vibrationTimerMessage[0];
+        int b = (vibrationTimerMessage[1] << 4);
+        int c = (vibrationTimerMessage[2] << 8);
+        int d = (vibrationTimerMessage[1] << 16);
+        vibrateTime = a + b + c + d;
+
+
         while(running) {
             try {
                 Bitmap bitmap;
@@ -51,7 +68,7 @@ public class Receive_Image extends Thread{
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
                 if(message[0] == 0 && message[1] == 0){//tenemos q activar vibracion pq hemos pulsado bien
-                    control.VibrateTimer(500);
+                    control.VibrateTimer(vibrateTime);
                 }
                 else { // es imagen
                     //creamos el bitmap desde el byteArray que recibimos

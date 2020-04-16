@@ -154,7 +154,6 @@ public class Controller extends Activity  {
     }
 
     public void VibrateTimer(int miliseconds){
-        //deprecated in API 26
         v.vibrate(miliseconds);
     }
 

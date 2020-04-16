@@ -51,7 +51,7 @@ public class Server : MonoBehaviour
     public void IniciarServer()
     {          
         s = new UDPSocket();
-        s.init(Port,qr);
+        s.init(Port,qr,100);
         s.AddListener(player);
     }
 
@@ -122,12 +122,14 @@ namespace Server_CSharp
         IPEndPoint anyIP;
         bool conectado = false;
         byte[] byteImg = new byte[200];
+        int vibrationTime;
         List<InputMovileInterface> listeners;
         // init
-        public void init(int port, QR qr)
+        public void init(int port, QR qr, int milisecondsForVibration = 500)
         {
             this.qr = qr;
             puerto = port;
+            vibrationTime = milisecondsForVibration;
             listeners = new List<InputMovileInterface>();
             receiveThread = new Thread(
                 new ThreadStart(ReceiveData));
@@ -184,6 +186,14 @@ namespace Server_CSharp
             while (!conectado) ;
             cliente.Connect(anyIP.Address,puerto);
             qr.endQRShow();//end the QR
+            byte[] timeToVibrate = new byte[4];
+            timeToVibrate[0] = (byte)(vibrationTime & 0x000000FF);
+            timeToVibrate[1] = (byte)((vibrationTime >> 4) & 0x000000FF);
+            timeToVibrate[2] = (byte)((vibrationTime >> 8) & 0x000000FF);
+            timeToVibrate[3] = (byte)((vibrationTime >> 16) & 0x000000FF);
+            cliente.Send(timeToVibrate, timeToVibrate.Length);
+
+
             while (sending)
             {
                 if (vibrate)
@@ -249,10 +259,10 @@ namespace Server_CSharp
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante
+                    Debug.Log("Waiting Finish");
                     f++;
                     if (f % 3 == 0)
-                        vibrate = true;
-                    Debug.Log("Waiting Finish");
+                        vibrate = true;                
                     if(data.Length > 1)
                     {
                         //Get the position where the user clicked
