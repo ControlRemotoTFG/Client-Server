@@ -17,9 +17,10 @@ public class PlayerController : MonoBehaviour, Server_CSharp.InputMovileInterfac
     int ScreenH;
 
 
-    public bool RecieveTouch(int x, int y, ref bool vibrate)
+    public bool RecieveTouch(int x, int y,int typeOfPress ,ref bool vibrate)
     {
-        vibrate = true;
+        if(typeOfPress == 1)
+            vibrate = true;
         return true;
     }
 

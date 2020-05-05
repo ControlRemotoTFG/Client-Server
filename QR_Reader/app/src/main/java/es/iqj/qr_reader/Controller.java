@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.VibrationEffect;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,7 +74,7 @@ public class Controller extends Activity  {
 
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     //TODO: get x and y coordenates and calculate wich hotspot has been touched
                     x = event.getX();
                     y = event.getY();
@@ -91,17 +90,18 @@ public class Controller extends Activity  {
                                 udpClientHandler,
                                 (int)x,
                                 (int)y,
+                                0,
                                 width,
                                 height);
                         udpClientThread.start();
                     }
                     else
-                        udpClientThread.clicked((int)x,(int)y);
+                        udpClientThread.clicked((int)x,(int)y,0);
                 }
 
                 //LEVANTAR
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(event.getActionMasked() == MotionEvent.ACTION_UP) {
 
                     if(udpClientThread == null) {
                         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -114,12 +114,35 @@ public class Controller extends Activity  {
                                 udpClientHandler,
                                 (int)x,
                                 (int)y,
+                                2,
                                 width,
                                 height);
                         udpClientThread.start();
                     }
                     else
-                        udpClientThread.clicked((int)x,(int)y);
+                        udpClientThread.clicked((int)x,(int)y,2);
+
+                }
+                if(event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+
+                    if(udpClientThread == null) {
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                        int height = displayMetrics.heightPixels;
+                        int width = displayMetrics.widthPixels;
+                        udpClientThread = new UdpClientThread(
+                                ip,
+                                Integer.parseInt(puerto),
+                                udpClientHandler,
+                                (int)x,
+                                (int)y,
+                                1,
+                                width,
+                                height);
+                        udpClientThread.start();
+                    }
+                    else
+                        udpClientThread.clicked((int)x,(int)y,1);
 
                 }
                 return true;

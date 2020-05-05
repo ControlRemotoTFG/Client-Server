@@ -22,7 +22,8 @@ public class UdpClientThread extends Thread{
     int yPos;
     int width;
     int height;
-    public UdpClientThread(String addr, int port, Controller.UdpClientHandler handler ,int x, int y, int widthScreen, int heightScreen){
+    int typeClick;
+    public UdpClientThread(String addr, int port, Controller.UdpClientHandler handler ,int x, int y,int type, int widthScreen, int heightScreen){
         super();
         dstAddress = addr;
         dstPort = port;
@@ -31,16 +32,18 @@ public class UdpClientThread extends Thread{
         yPos = y;
         width = widthScreen;
         height = heightScreen;
+        typeClick = type;
     }
 
     public void setRunning(boolean running){
         this.running = running;
     }
 
-    public void clicked(int x, int y){
+    public void clicked(int x, int y, int type){
         xPos = x;
         yPos = y;
         ready = true;
+        typeClick = type;
     }
 
 
@@ -51,13 +54,14 @@ public class UdpClientThread extends Thread{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        byte[] buf = new byte[8];
+        byte[] buf = new byte[9];
         running = true;
         try {
             address = InetAddress.getByName(dstAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        //envio tamaño de la pantalla
         buf[0] = (byte)(width & (0x000000FF));
         buf[1] = (byte)((width & (0x0000FF00)) >> 4);
         buf[2] = (byte)((width & (0x00FF0000)) >> 8);
@@ -84,19 +88,16 @@ public class UdpClientThread extends Thread{
                     address = InetAddress.getByName(dstAddress);
                     System.out.println(address);
                     // send request
+                    buf[0] = (byte)(typeClick & (0x000F));
+                    buf[1] = (byte)(xPos & (0x000F));
+                    buf[2] = (byte)((xPos & (0x00F0)) >> 4);
+                    buf[3] = (byte)((xPos & (0x0F00)) >> 8);
+                    buf[4] = (byte)((xPos & (0xF000)) >> 16);
 
-                    buf[0] = (byte)(xPos & (0x000000FF));
-                    buf[1] = (byte)((xPos & (0x0000FF00)) >> 4);
-                    buf[2] = (byte)((xPos & (0x00FF0000)) >> 8);
-                    buf[3] = (byte)((xPos & (0xFF000000)) >> 16);
-
-                    buf[4] = (byte)(yPos & (0x000F));
-                    buf[5] = (byte)((yPos & (0x00F0)) >> 4);
-                    buf[6] = (byte)((yPos & (0x0F00)) >> 8);
-                    buf[7] = (byte)((yPos & (0xF000)) >> 16);
-
-
-                    System.out.println(yPos + "  "+ buf[4] + "  " + buf[5]+ "  " + buf[6]+ "  " + buf[7]);
+                    buf[5] = (byte)(yPos & (0x000F));
+                    buf[6] = (byte)((yPos & (0x00F0)) >> 4);
+                    buf[7] = (byte)((yPos & (0x0F00)) >> 8);
+                    buf[8] = (byte)((yPos & (0xF000)) >> 16);
 
                     socket.send(packet);
 

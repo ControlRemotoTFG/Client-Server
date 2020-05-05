@@ -1,0 +1,3 @@
+Arregleme unity el png no tiene transparencia y quiero que tenga(EL PNG DE LOS BOTONES DEL MANDO)
+
+ANDROID: Corta la imagen q llega de unity a la mitad y todo lo demas es negro

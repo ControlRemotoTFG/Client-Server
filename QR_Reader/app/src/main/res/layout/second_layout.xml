@@ -8,21 +8,19 @@
 
     <FrameLayout
         android:layout_width="700dp"
-        android:layout_height="350dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/fondo"
+            android:layout_width="match_parent"
+            android:layout_height="697dp"
             android:background="@drawable/fondoprueba">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+            <RelativeLayout
                 android:id="@+id/mando"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha="0.4"
-                android:background="@drawable/mandoprueba"></RelativeLayout>
+                android:alpha="0.4"></RelativeLayout>
 
 
         </RelativeLayout>

@@ -100,7 +100,7 @@ namespace Server_CSharp
 {
     public interface InputMovileInterface
     {
-        bool RecieveTouch(int x, int y, ref bool vibrate);
+        bool RecieveTouch(int x, int y, int typeOfPress, ref bool vibrate);
 
         bool EndOfConection();
 
@@ -266,22 +266,23 @@ namespace Server_CSharp
                     if(data.Length > 1)
                     {
                         //Get the position where the user clicked
-                        pos0 = data[0];
-                        pos1 = (data[1] << 4);
-                        pos2 = (data[2] << 8);
-                        pos3 = (data[3] << 16);
+                        int type = data[0];
+                        pos0 = data[1];
+                        pos1 = (data[2] << 4);
+                        pos2 = (data[3] << 8);
+                        pos3 = (data[4] << 16);
 
-                        pos4 = data[4];
-                        pos5 = (data[5] << 4);
-                        pos6 = (data[6] << 8);
-                        pos7 = (data[7] << 16);
+                        pos4 = data[5];
+                        pos5 = (data[6] << 4);
+                        pos6 = (data[7] << 8);
+                        pos7 = (data[8] << 16);
 
                         x = pos0 + pos1 + pos2 + pos3;
                         y = pos4 + pos5 + pos6 + pos7;
                         foreach (InputMovileInterface i in listeners)
                         {
                             bool v = false;
-                            if (i.RecieveTouch(x, y, ref v))//Pass the event, if its consumed we stop passing the event
+                            if (i.RecieveTouch(x, y,type, ref v))//Pass the event, if its consumed we stop passing the event
                             {
                                 vibrate = v;
                                 break;
