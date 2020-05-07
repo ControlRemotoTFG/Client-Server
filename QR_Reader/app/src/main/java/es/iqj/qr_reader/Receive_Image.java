@@ -63,7 +63,7 @@ public class Receive_Image extends Thread{
             try {
                 Bitmap bitmap;
                 //el tamaño maximo que podemos recibir
-                byte[] message = new byte[1900];//entre 1900-1700
+                byte[] message = new byte[64000];//entre 1900-1700
                 DatagramPacket receivePacket = new DatagramPacket(message, message.length);
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);

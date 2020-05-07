@@ -249,7 +249,6 @@ namespace Server_CSharp
             }
 
 
-            int f = 0;
             conectado = true;//activamos mandar img
             while (continua)
             {
@@ -259,10 +258,7 @@ namespace Server_CSharp
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     Debug.Log("Waiting...");
                     data = client.Receive(ref anyIP); //bloqueante
-                    Debug.Log("Waiting Finish");
-                    f++;
-                    if (f % 3 == 0)
-                        vibrate = true;                
+                    Debug.Log("Waiting Finish");                                 
                     if(data.Length > 1)
                     {
                         //Get the position where the user clicked
