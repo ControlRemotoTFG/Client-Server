@@ -22,6 +22,7 @@ public class SelectController : MonoBehaviour
     private void Start()
     {
         directorTrigger.SetActive(false);//CongelarJuego
+        kartMovement.enabled = false;
     }
 
     public void ControlerSelected()
@@ -31,6 +32,7 @@ public class SelectController : MonoBehaviour
         SelectionMode.enabled = false;
         mobileInput.enabled = false;
         kartMovement.input = keyInput;
+        kartMovement.enabled = true;
         directorTrigger.SetActive(true);//DescongelarJuego
     }
 
@@ -41,6 +43,7 @@ public class SelectController : MonoBehaviour
         gamePadInput.enabled = false;
         keyInput.enabled = false;
         kartMovement.input = mobileInput;
+        kartMovement.enabled = true;
         server.IniciarServer();
         server.AddListener(mobileInput);
         directorTrigger.SetActive(true);//DescongelarJuego

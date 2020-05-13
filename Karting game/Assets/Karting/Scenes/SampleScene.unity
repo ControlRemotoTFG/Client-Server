@@ -4379,7 +4379,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 1388116303}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388116304}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53099c8bf5564a54caebda5331b303b6, type: 3}
   m_Name: 
@@ -12177,6 +12177,11 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1388116306}
+    - target: {fileID: 3763822634849867138, guid: 8a2015a9601d162459389c9b9d1437fc,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3763822634849867139, guid: 8a2015a9601d162459389c9b9d1437fc,
         type: 3}
       propertyPath: m_Enabled
@@ -12241,6 +12246,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Kart
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763822634849867148, guid: 8a2015a9601d162459389c9b9d1437fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a2015a9601d162459389c9b9d1437fc, type: 3}

@@ -9,6 +9,29 @@ namespace KartGame.KartSystems
         private int widthScreen;
         private int heightScreen;
 
+        //Para 2220x1080
+        private struct ButtonMobile{
+            public ButtonMobile(int x,int y,int alto, int ancho)
+            {
+                this.x = x;
+                this.y = y;
+                this.alto = alto;
+                this.ancho = ancho;
+            }
+            public int x;
+            public int y;
+            public int alto;
+            public int ancho;
+        }
+        private ButtonMobile Arriba = new ButtonMobile(230,221,182,233);
+        private ButtonMobile Derecha = new ButtonMobile(463,403,137,257);
+        private ButtonMobile Abajo = new ButtonMobile(230,540,150,233);
+        private ButtonMobile Izquierda = new ButtonMobile(5,403,137,225);
+        private ButtonMobile A = new ButtonMobile(990,100,310,560);
+        private ButtonMobile B = new ButtonMobile(1450,380,330,470);
+        private ButtonMobile Start = new ButtonMobile(780,620,60,550);
+        private ButtonMobile Select = new ButtonMobile(740,760,80,630);
+        
         public float Acceleration
         {
             get { return m_Acceleration; }
@@ -42,62 +65,63 @@ namespace KartGame.KartSystems
         bool m_FirePressed;
 
         bool m_FixedUpdateHappened;
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        void FixedUpdate()
-        {
-            m_FixedUpdateHappened = true;
-        }
-
+        bool pressedJump = false;
         public bool RecieveTouch(int x, int y, int typeOfPress, ref bool vibrate)
         {
+            vibrate = false;
             
-            if (Input.GetKey(KeyCode.UpArrow))
-                m_Acceleration = 1f;
-            else if (Input.GetKey(KeyCode.DownArrow))
+            if (x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 0)
                 m_Acceleration = -1f;
-            else
-                m_Acceleration = 0f;
+            else if(x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 1)
+                m_Acceleration = 1f;
 
-            if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+            if (x > Izquierda.x && x < Izquierda.x + Izquierda.ancho && y > Izquierda.y && y < Izquierda.y + Izquierda.alto && typeOfPress == 0)
                 m_Steering = -1f;
-            else if (!Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+            else if (x > Derecha.x && x < Derecha.x + Derecha.ancho && y > Derecha.y && y < Derecha.y + Derecha.alto && typeOfPress == 0)
                 m_Steering = 1f;
-            else
+            else if(x > Izquierda.x && x < Izquierda.x + Izquierda.ancho && y > Izquierda.y && y < Izquierda.y + Izquierda.alto && typeOfPress == 1 ||
+                x > Derecha.x && x < Derecha.x + Derecha.ancho && y > Derecha.y && y < Derecha.y + Derecha.alto && typeOfPress == 1)
                 m_Steering = 0f;
 
-            m_HopHeld = Input.GetKey(KeyCode.Space);
-
-            if (m_FixedUpdateHappened)
+            /*if (x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto)
+                m_HopHeld = true; //DRIFTING IN THE NIGHT*/
+            if (pressedJump)
             {
-                m_FixedUpdateHappened = false;
-
                 m_HopPressed = false;
-                m_BoostPressed = false;
-                m_FirePressed = false;
+                m_HopHeld = true;
+            }
+            else
+                m_HopHeld = false;
+
+            if (x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto && typeOfPress == 0)
+            {
+                pressedJump = true;
+                m_HopPressed = true; //NORMAL JUMP
+            }
+            else if(x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto && typeOfPress == 1)//dejo de pulsar b
+            {
+                pressedJump = false;
+                m_HopPressed = false;
+                m_HopHeld = false;
             }
 
-            m_HopPressed |= Input.GetKeyDown(KeyCode.Space);
-            m_BoostPressed |= Input.GetKeyDown(KeyCode.RightShift);
-            m_FirePressed |= Input.GetKeyDown(KeyCode.RightControl);
-
-
-            vibrate = false;
+          
+            m_BoostPressed |= false;
+            m_FirePressed |= false;
+     
             return true;
         }
 
         public bool EndOfConection()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("F");
+            return true;
         }
 
         public bool ScreenSize(int width, int height)
         {
+            pressedJump = false;
+            m_Acceleration = 1f;
             widthScreen = width;
             heightScreen = height;
             return true;

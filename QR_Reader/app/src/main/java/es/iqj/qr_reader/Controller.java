@@ -74,10 +74,13 @@ public class Controller extends Activity  {
 
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                if(event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                int pointerIndex = event.getActionIndex();
+                int maskedAction = event.getActionMasked();
+
+                if(maskedAction == MotionEvent.ACTION_DOWN || maskedAction == MotionEvent.ACTION_POINTER_DOWN) {
                     //TODO: get x and y coordenates and calculate wich hotspot has been touched
-                    x = event.getX();
-                    y = event.getY();
+                    x = event.getX(pointerIndex);
+                    y = event.getY(pointerIndex);
 
                     if(udpClientThread == null) {
                         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -101,7 +104,9 @@ public class Controller extends Activity  {
 
                 //LEVANTAR
 
-                if(event.getActionMasked() == MotionEvent.ACTION_UP) {
+                if(maskedAction == MotionEvent.ACTION_UP || maskedAction == MotionEvent.ACTION_POINTER_UP) {
+                    x = event.getX(pointerIndex);
+                    y = event.getY(pointerIndex);
 
                     if(udpClientThread == null) {
                         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -115,28 +120,6 @@ public class Controller extends Activity  {
                                 (int)x,
                                 (int)y,
                                 2,
-                                width,
-                                height);
-                        udpClientThread.start();
-                    }
-                    else
-                        udpClientThread.clicked((int)x,(int)y,2);
-
-                }
-                if(event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-
-                    if(udpClientThread == null) {
-                        DisplayMetrics displayMetrics = new DisplayMetrics();
-                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                        int height = displayMetrics.heightPixels;
-                        int width = displayMetrics.widthPixels;
-                        udpClientThread = new UdpClientThread(
-                                ip,
-                                Integer.parseInt(puerto),
-                                udpClientHandler,
-                                (int)x,
-                                (int)y,
-                                1,
                                 width,
                                 height);
                         udpClientThread.start();
