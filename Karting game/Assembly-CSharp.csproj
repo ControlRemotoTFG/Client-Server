@@ -66,6 +66,7 @@
     <Compile Include="Assets\Karting\Scripts\KartSystems\Inputs\GamepadInput.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\Inputs\IInput.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\Inputs\KeyboardInput.cs" />
+    <Compile Include="Assets\Karting\Scripts\KartSystems\Inputs\MobileInput.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartAnimation\KartAnimation.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartAudio\EngineAudio.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartAudio\EngineAudio.Stroke.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartMovement\KartStats.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\PlayerController.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\QR.cs" />
+    <Compile Include="Assets\Karting\Scripts\Server\SelectController.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\Server.cs" />
     <Compile Include="Assets\Karting\Scripts\Timeline\DirectorTrigger.cs" />
     <Compile Include="Assets\Karting\Scripts\Track\Checkpoint.cs" />

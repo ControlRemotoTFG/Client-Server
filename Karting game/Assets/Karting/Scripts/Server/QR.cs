@@ -14,7 +14,6 @@ public class QR : MonoBehaviour
     {
         System.Int32 port = server.getPort();
         string ip = Server.GetIP();
-
         myQR = generateQR(port + ":" + ip);
     }
 
@@ -44,7 +43,7 @@ private static Color32[] Encode(string textForEncoding, int width, int height)
         return writer.Write(textForEncoding);
     }
 
-    public Texture2D generateQR(string text)
+    private Texture2D generateQR(string text)
     {
         var encoded = new Texture2D(256, 256);
         var color32 = Encode(text, encoded.width, encoded.height);

@@ -18,7 +18,6 @@ public class Server : MonoBehaviour
     public System.Int32 Port;
     UDPSocket s;
     public QR qr;
-    public PlayerController player;
     public Camera camera;
     // Use this for initialization
     WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
@@ -51,8 +50,8 @@ public class Server : MonoBehaviour
     public void IniciarServer()
     {          
         s = new UDPSocket();
-        s.init(Port,qr,100);
-        s.AddListener(player);
+        qr.Generate_QR();
+        s.init(Port,qr,100); 
     }
 
     public void endQRShow()
@@ -90,6 +89,12 @@ public class Server : MonoBehaviour
         s.StopRunning();
     }
    
+    public void AddListener(InputMovileInterface listener)
+    {
+        s.AddListener(listener);
+    }
+
+
 }
 
 
