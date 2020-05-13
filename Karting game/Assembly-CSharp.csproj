@@ -84,8 +84,10 @@
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartMovement\IMovable.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartMovement\KartMovement.cs" />
     <Compile Include="Assets\Karting\Scripts\KartSystems\KartMovement\KartStats.cs" />
+    <Compile Include="Assets\Karting\Scripts\Server\ExitApp.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\PlayerController.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\QR.cs" />
+    <Compile Include="Assets\Karting\Scripts\Server\Reconnect.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\SelectController.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\Server.cs" />
     <Compile Include="Assets\Karting\Scripts\Timeline\DirectorTrigger.cs" />

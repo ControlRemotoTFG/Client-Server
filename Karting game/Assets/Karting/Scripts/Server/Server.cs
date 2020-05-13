@@ -51,7 +51,7 @@ public class Server : MonoBehaviour
     {          
         s = new UDPSocket();
         qr.Generate_QR();
-        s.init(Port,qr,100); 
+        s.init(Port,qr,15); 
     }
 
     public void endQRShow()
@@ -307,6 +307,8 @@ namespace Server_CSharp
                 if (i.EndOfConection())
                     break;
             }
+
+            client.Close();
         }
 
         private IPAddress GetAddress()

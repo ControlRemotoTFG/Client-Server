@@ -17,13 +17,28 @@ public class SelectController : MonoBehaviour
     [SerializeField]
     private KartGame.KartSystems.KartMovement kartMovement;
     [SerializeField]
+    private KartGame.KartSystems.KartAnimation kartAnimation;
+    [SerializeField]
     private GameObject directorTrigger;
 
+    public bool finish;
     private void Start()
     {
+        finish = false;
         directorTrigger.SetActive(false);//CongelarJuego
         kartMovement.enabled = false;
+        kartAnimation.enabled = false;
     }
+
+    private void Update()
+    {
+        if (finish)
+        {
+            directorTrigger.SetActive(true);//DescongelarJuego
+            Destroy(this.gameObject);
+        }
+    }
+
 
     public void ControlerSelected()
     {
@@ -32,8 +47,10 @@ public class SelectController : MonoBehaviour
         SelectionMode.enabled = false;
         mobileInput.enabled = false;
         kartMovement.input = keyInput;
+        kartAnimation.input = keyInput;
         kartMovement.enabled = true;
-        directorTrigger.SetActive(true);//DescongelarJuego
+        kartAnimation.enabled = true;
+        finish = true;
     }
 
     public void MobileSelected()
@@ -43,9 +60,15 @@ public class SelectController : MonoBehaviour
         gamePadInput.enabled = false;
         keyInput.enabled = false;
         kartMovement.input = mobileInput;
+        kartAnimation.input = mobileInput;
         kartMovement.enabled = true;
+        kartAnimation.enabled = true;
         server.IniciarServer();
         server.AddListener(mobileInput);
-        directorTrigger.SetActive(true);//DescongelarJuego
+    }
+
+    public void MobileConected()
+    {
+        finish = true;
     }
 }

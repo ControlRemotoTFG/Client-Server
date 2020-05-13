@@ -8,7 +8,12 @@ namespace KartGame.KartSystems
     {
         private int widthScreen;
         private int heightScreen;
-
+        [SerializeField]
+        private Server server;
+        [SerializeField]
+        private SelectController selectController;
+        [SerializeField]
+        private Reconnect reconnectOBJ;
         //Para 2220x1080
         private struct ButtonMobile{
             public ButtonMobile(int x,int y,int alto, int ancho)
@@ -69,32 +74,38 @@ namespace KartGame.KartSystems
         public bool RecieveTouch(int x, int y, int typeOfPress, ref bool vibrate)
         {
             vibrate = false;
-            
-            if (x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 0)
-                m_Acceleration = -1f;
-            else if(x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 1)
-                m_Acceleration = 1f;
 
+            if (x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 0)
+            {
+                vibrate = true;
+                m_Acceleration = -1f;
+            }
+            else if (x > A.x && x < A.x + A.ancho && y > A.y && y < A.y + A.alto && typeOfPress == 1)
+                m_Acceleration = 1f;
             if (x > Izquierda.x && x < Izquierda.x + Izquierda.ancho && y > Izquierda.y && y < Izquierda.y + Izquierda.alto && typeOfPress == 0)
+            {
+                vibrate = true;
                 m_Steering = -1f;
+            }
             else if (x > Derecha.x && x < Derecha.x + Derecha.ancho && y > Derecha.y && y < Derecha.y + Derecha.alto && typeOfPress == 0)
+            {
+                vibrate = true;
                 m_Steering = 1f;
-            else if(x > Izquierda.x && x < Izquierda.x + Izquierda.ancho && y > Izquierda.y && y < Izquierda.y + Izquierda.alto && typeOfPress == 1 ||
+            }               
+            else if (x > Izquierda.x && x < Izquierda.x + Izquierda.ancho && y > Izquierda.y && y < Izquierda.y + Izquierda.alto && typeOfPress == 1 ||
                 x > Derecha.x && x < Derecha.x + Derecha.ancho && y > Derecha.y && y < Derecha.y + Derecha.alto && typeOfPress == 1)
                 m_Steering = 0f;
 
-            /*if (x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto)
-                m_HopHeld = true; //DRIFTING IN THE NIGHT*/
+
             if (pressedJump)
             {
                 m_HopPressed = false;
                 m_HopHeld = true;
             }
-            else
-                m_HopHeld = false;
 
-            if (x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto && typeOfPress == 0)
+            if (x > B.x && x < B.x + B.ancho && y > B.y && y < B.y + B.alto && typeOfPress == 0 && !pressedJump)
             {
+                vibrate = true;
                 pressedJump = true;
                 m_HopPressed = true; //NORMAL JUMP
             }
@@ -114,7 +125,7 @@ namespace KartGame.KartSystems
 
         public bool EndOfConection()
         {
-            Debug.Log("F");
+            reconnectOBJ.LostConnection();
             return true;
         }
 
@@ -124,6 +135,7 @@ namespace KartGame.KartSystems
             m_Acceleration = 1f;
             widthScreen = width;
             heightScreen = height;
+            selectController.MobileConected();
             return true;
         }
     }

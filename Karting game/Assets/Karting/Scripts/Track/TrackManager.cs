@@ -195,7 +195,7 @@ namespace KartGame.Track
 
                     if (m_HistoricalBestLap.time > lapTime)
                         m_HistoricalBestLap.SetRecord (trackName, 1, racer, lapTime);
-
+                    /*
                     if (racerCurrentLap == raceLapTotal)
                     {
                         float raceTime = racer.GetRaceTime ();
@@ -206,13 +206,13 @@ namespace KartGame.Track
                         if (m_HistoricalBestRace.time > raceTime)
                             m_HistoricalBestLap.SetRecord (trackName, raceLapTotal, racer, raceTime);
 
-                        racer.DisableControl ();
-                        racer.PauseTimer ();
-                    }
+                        //racer.DisableControl ();
+                        //racer.PauseTimer ();   
+                    }*/
                 }
-
+                /*
                 if (CanEndRace ())
-                    StopRace ();
+                    StopRace ();  */
 
                 racer.HitStartFinishLine ();
             }

@@ -12,6 +12,7 @@ public class QR : MonoBehaviour
     // Start is called before the first frame update
      public void Generate_QR()
     {
+        conected = false;
         System.Int32 port = server.getPort();
         string ip = Server.GetIP();
         myQR = generateQR(port + ":" + ip);
