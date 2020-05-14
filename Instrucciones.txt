@@ -1,0 +1,25 @@
+
+Punto NUMERO 1:
+	
+	Desactiva el firewall o windows defender/antivirusX matara a los pobres paquetes indefensos que manda el movil con amor.
+
+Punto Number 2:
+
+	Si veis que algo peta a veces funciona reiniciando ese algo.
+
+
+Controles de PC:
+
+	Salto con Space para iniciar drift, mantener espacio para seguir haciendo drift.
+
+	Flechas derecha e irzquierda para girar.
+
+	Flechas arriba y abajo para acelerar y frenar respectivamente.
+
+Controles Android:
+
+	Se acelera solo. Para frenar pulsa A.
+
+	Pulsa B para saltar y manten B para driftear.
+
+	Usa boton derecha e izquierda de la cruceta("cru Z" :D) para girar.
