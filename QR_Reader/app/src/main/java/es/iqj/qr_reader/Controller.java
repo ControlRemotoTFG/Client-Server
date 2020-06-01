@@ -25,7 +25,7 @@ public class Controller extends Activity  {
     Vibrator v;
     String puerto = "";
     String ip = "";
-
+    private Controller myController;
     Intent activityThatCalled;
 
     RelativeLayout myLayout = null;
@@ -33,7 +33,7 @@ public class Controller extends Activity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        myController = this;
         // Set the layout for the layout we created
         setContentView(R.layout.second_layout);
 
@@ -90,7 +90,7 @@ public class Controller extends Activity  {
                         udpClientThread = new UdpClientThread(
                                 ip,
                                 Integer.parseInt(puerto),
-                                udpClientHandler,
+                                myController,
                                 (int)x,
                                 (int)y,
                                 0,
@@ -116,7 +116,7 @@ public class Controller extends Activity  {
                         udpClientThread = new UdpClientThread(
                                 ip,
                                 Integer.parseInt(puerto),
-                                udpClientHandler,
+                                myController,
                                 (int)x,
                                 (int)y,
                                 2,
@@ -139,6 +139,10 @@ public class Controller extends Activity  {
         udpClientHandler = new UdpClientHandler(this);
     }
 
+
+    public int[] getTimePerImage(){
+        return receive_image.getTimePerImage().clone();
+    }
 
     public void onPause(){
         super.onPause();

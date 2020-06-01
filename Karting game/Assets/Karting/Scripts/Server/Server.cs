@@ -6,12 +6,14 @@ using System.Net.NetworkInformation;
 
 public class Server : MonoBehaviour
 {
-
-    string IP;
     public System.Int32 Port;
     UDPSocket s;
-    public QR qr;
-    public Camera camera;
+    [SerializeField]
+    private QR qr;
+    [SerializeField]
+    private Camera camera;
+    [SerializeField]
+    private TrackerInfo trackerInfo;
     // Use this for initialization
     WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
 
@@ -24,9 +26,10 @@ public class Server : MonoBehaviour
     {
         if (s != null && s.checkSending())
         {
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            camera.Render();
+
             Texture2D texture = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
             //Read the pixels in the Rect starting at 0,0 and ending at the screen's width and height
             RenderTexture.active = camera.targetTexture;
@@ -38,13 +41,15 @@ public class Server : MonoBehaviour
             Destroy(texture);
 
             watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            trackerInfo.AddTimeConvertImage((int)elapsedMs);
         }
     }
     public void IniciarServer()
     {          
         s = new UDPSocket();
         qr.Generate_QR();
-        s.init(Port,qr,15); 
+        s.init(Port,qr,trackerInfo,15); 
     }
 
     public void endQRShow()

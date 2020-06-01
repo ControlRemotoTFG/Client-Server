@@ -19,6 +19,8 @@ public class SelectController : MonoBehaviour
     [SerializeField]
     private KartGame.KartSystems.KartAnimation kartAnimation;
     [SerializeField]
+    private TrackerInfo trackerInfo;
+    [SerializeField]
     private GameObject directorTrigger;
 
     public bool finish;
@@ -42,6 +44,7 @@ public class SelectController : MonoBehaviour
 
     public void ControlerSelected()
     {
+        Destroy(trackerInfo.gameObject);
         gamePadInput.enabled = true;
         keyInput.enabled = true;
         SelectionMode.enabled = false;

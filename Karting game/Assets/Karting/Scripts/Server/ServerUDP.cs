@@ -34,11 +34,13 @@ namespace Server_CSharp
         byte[] byteImg = new byte[200];
         int vibrationTime;
         List<InputMovileInterface> listeners;
+        TrackerInfo trackerInfo;
         // init
-        public void init(int port, QR qr, int milisecondsForVibration = 500)
+        public void init(int port, QR qr, TrackerInfo trackerInfo, int milisecondsForVibration = 500)
         {
             this.qr = qr;
             puerto = port;
+            this.trackerInfo = trackerInfo;
             vibrationTime = milisecondsForVibration;
             listeners = new List<InputMovileInterface>();
             receiveThread = new Thread(
@@ -165,7 +167,7 @@ namespace Server_CSharp
                 {
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
                     data = client.Receive(ref anyIP); //bloqueante
-                    if (data.Length > 1)
+                    if (data.Length > 1 && data.Length < 15)
                     {
                         //Get the position where the user clicked
                         int type = data[0];
@@ -189,6 +191,22 @@ namespace Server_CSharp
                                 vibrate = v;
                                 break;
                             }
+                        }
+                    }
+                    else if(data.Length >= 15)
+                    {
+                        int[] timePerImage = new int[data.Length/4];
+
+                        for(int i = 0; i < timePerImage.Length; i++)
+                        {
+                            int posAct = i * 4;
+                            pos0 = data[posAct];
+                            pos1 = (data[posAct + 1] << 4);
+                            pos2 = (data[posAct + 2] << 8);
+                            pos3 = (data[posAct + 3] << 16);
+                            timePerImage[i] = pos0 + pos1 + pos2 + pos3;
+
+                            trackerInfo.AddTimePerImageAndroid(timePerImage);
                         }
                     }
                     else if (data[0] == 2)

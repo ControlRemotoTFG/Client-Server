@@ -15,6 +15,7 @@ public class UdpClientThread extends Thread{
     int dstPort;
     private boolean running;
     Controller.UdpClientHandler handler;
+    Controller controller;
 
     DatagramSocket socket;
     InetAddress address;
@@ -23,16 +24,18 @@ public class UdpClientThread extends Thread{
     int width;
     int height;
     int typeClick;
-    public UdpClientThread(String addr, int port, Controller.UdpClientHandler handler ,int x, int y,int type, int widthScreen, int heightScreen){
+    public UdpClientThread(String addr, int port, Controller control ,int x, int y,int type, int widthScreen, int heightScreen){
         super();
         dstAddress = addr;
         dstPort = port;
-        this.handler = handler;
+        this.handler = control.udpClientHandler;
         xPos = x;
         yPos = y;
         width = widthScreen;
         height = heightScreen;
         typeClick = type;
+        controller = control;
+
     }
 
     public void setRunning(boolean running){
@@ -110,6 +113,27 @@ public class UdpClientThread extends Thread{
                 }
             }
         }
+
+        int [] timePerImage = controller.getTimePerImage();
+        byte[] bufferImgMessage = new byte[timePerImage.length * 4];
+
+        for(int i = 0; i < timePerImage.length; i++){
+            int pos = i * 4;
+            bufferImgMessage[pos] = (byte)(timePerImage[i] & (0x000F));
+            bufferImgMessage[pos + 1] = (byte)((timePerImage[i] & (0x00F0)) >> 4);
+            bufferImgMessage[pos + 2] = (byte)((timePerImage[i] & (0x0F00)) >> 8);
+            bufferImgMessage[pos + 3] = (byte)((timePerImage[i] & (0xF000)) >> 16);
+        }
+        packet =
+                new DatagramPacket(bufferImgMessage, bufferImgMessage.length, address, dstPort);
+
+        try {
+            socket.send(packet);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
 
         byte[] buff = new byte[1];
 

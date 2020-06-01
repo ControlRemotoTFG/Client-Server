@@ -2475,6 +2475,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 664799114}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &312007413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 312007414}
+  - component: {fileID: 312007415}
+  m_Layer: 0
+  m_Name: TrackerManagement
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &312007414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312007413}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 308.72693, y: 214.95648, z: 161.875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 26
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &312007415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312007413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6863b7a5f34a47340bb8102a463260a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &312985616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4263,6 +4306,7 @@ MonoBehaviour:
   Port: 54000
   qr: {fileID: 1642590050}
   camera: {fileID: 764914230}
+  trackerInfo: {fileID: 312007415}
 --- !u!1001 &448553352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15661,6 +15705,7 @@ MonoBehaviour:
   mobileInput: {fileID: 1388116311}
   kartMovement: {fileID: 456848484}
   kartAnimation: {fileID: 1388116307}
+  trackerInfo: {fileID: 312007415}
   directorTrigger: {fileID: 1978396830}
   finish: 0
 --- !u!4 &1732059340

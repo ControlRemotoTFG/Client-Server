@@ -18,12 +18,19 @@ public class Receive_Image extends Thread{
     int port;
     private boolean running;//boolean de control del thread
     Controller control;//recibimos la activity
-
+    private int [] timePerImage;
 
     public Receive_Image(String addr, int port,Controller control ){
         dstAddress = addr;
+        timePerImage = new int[31];
+        for(int i = 0; i < timePerImage.length; i++)
+            timePerImage[i] = 0;
         this.port = port;
         this.control = control;
+    }
+
+    public int[] getTimePerImage() {
+        return timePerImage;
     }
 
     public void setRunning(boolean running){
@@ -86,6 +93,8 @@ public class Receive_Image extends Thread{
                     });
                     long endTime = System.nanoTime();
                     long timeElapsed = endTime - statTime;
+                    if((int)(timeElapsed / 1000000) < timePerImage.length && timeElapsed >= 0)
+                        timePerImage[(int)(timeElapsed / 1000000)] += 1;
                     //System.out.println((timeElapsed / 1000000) + " ms time descompressing img");
                     //TOTAL = 13-15 MS MEDIA
                 }

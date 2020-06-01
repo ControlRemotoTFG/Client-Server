@@ -91,6 +91,7 @@
     <Compile Include="Assets\Karting\Scripts\Server\SelectController.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\Server.cs" />
     <Compile Include="Assets\Karting\Scripts\Server\ServerUDP.cs" />
+    <Compile Include="Assets\Karting\Scripts\Server\TrackerInfo.cs" />
     <Compile Include="Assets\Karting\Scripts\Timeline\DirectorTrigger.cs" />
     <Compile Include="Assets\Karting\Scripts\Track\Checkpoint.cs" />
     <Compile Include="Assets\Karting\Scripts\Track\InstantKartRepositioner.cs" />
