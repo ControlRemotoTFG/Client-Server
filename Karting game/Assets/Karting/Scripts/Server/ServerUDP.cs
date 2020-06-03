@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Net;
 using System;
-
+using System.Text;
 namespace Server_CSharp
 {
     public interface InputMovileInterface
@@ -105,6 +105,16 @@ namespace Server_CSharp
             timeToVibrate[2] = (byte)((vibrationTime >> 8) & 0x000000FF);
             timeToVibrate[3] = (byte)((vibrationTime >> 16) & 0x000000FF);
             cliente.Send(timeToVibrate, timeToVibrate.Length);
+
+            //miramos latencia con un ping
+            Ping pingSender = new Ping();
+            PingReply reply = pingSender.Send(anyIP.Address);
+            if (reply.Status == IPStatus.Success)
+            {
+                trackerInfo.AddLatencyOfNetwork((int)(reply.RoundtripTime/2));
+                Console.Out.WriteLine("Completed " + reply.RoundtripTime / 2);
+            }
+            pingSender.Dispose();
 
 
             while (sending)

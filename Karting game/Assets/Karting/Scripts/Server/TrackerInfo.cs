@@ -7,13 +7,14 @@ using System.IO;
 public class TrackerInfo : MonoBehaviour
 {
     private string path = "";
-
+    private int latency;
     private int [] timePerConvertImage;
     private int [] timePerImageAndroid;
     private bool writing;
     // Start is called before the first frame update
     void Start()
     {
+        latency = -1;
         writing = false;
         timePerConvertImage = new int[31];
         for (int i = 0; i < timePerConvertImage.Length; i++)
@@ -47,6 +48,10 @@ public class TrackerInfo : MonoBehaviour
         }
     }
 
+    public void AddLatencyOfNetwork(int latency)
+    {
+        this.latency = latency;
+    }
     public void AddTimeConvertImage(int timeInMiliseconds)
     {
         if(timeInMiliseconds < timePerConvertImage.Length && timeInMiliseconds >= 0)
@@ -68,7 +73,7 @@ public class TrackerInfo : MonoBehaviour
         for (int i = 2; i < timePerConvertImage.Length; i++)
             timePerConvertion += " " + i + " " + timePerConvertImage[i];
 
-        timePerConvertion += "\n";
+        timePerConvertion += "\n" + "La latencia de red es " + latency + "\n";
 
         File.AppendAllText(path, timePerConvertion);
     }
