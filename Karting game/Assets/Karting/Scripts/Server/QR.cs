@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using ZXing;
 using ZXing.QrCode;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 public class QR : MonoBehaviour
 {
-    Texture2D myQR;
-    public Server server;
-    GameObject button;
-    bool conected = false;
+    [SerializeField]
+    System.Int32 port;
+    private Texture2D myQR;
+    private GameObject button;
+    private bool conected = false;
     // Start is called before the first frame update
      public void Generate_QR()
     {
         conected = false;
-        System.Int32 port = server.getPort();
-        string ip = Server.GetIP();
+        string ip = GetIP();
         myQR = generateQR(port + ":" + ip);
     }
 
@@ -51,6 +53,31 @@ private static Color32[] Encode(string textForEncoding, int width, int height)
         encoded.SetPixels32(color32);
         encoded.Apply();
         return encoded;
+    }
+
+    public static string GetIP()
+    {
+        string output = "";
+
+        foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+        {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            NetworkInterfaceType _type1 = NetworkInterfaceType.Wireless80211;
+            NetworkInterfaceType _type2 = NetworkInterfaceType.Ethernet;
+
+            if ((item.NetworkInterfaceType == _type1 || item.NetworkInterfaceType == _type2) && item.OperationalStatus == OperationalStatus.Up)
+#endif 
+            {
+                foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        output = ip.Address.ToString();
+                    }
+                }
+            }
+        }
+        return output;
     }
 
 

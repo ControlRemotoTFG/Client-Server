@@ -63,22 +63,9 @@ namespace Server_CSharp
             byteImg = arrayImg;
             send = true;
         }
-        public void StopRunning()
-        {
-            continua = false;
-        }
-
         public void StopSending()
         {
             sending = false;
-        }
-        public void ActivateSending()
-        {
-            sending = true;
-        }
-        public void Send()
-        {
-            send = true;
         }
         public bool checkSending()
         {

@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 public class Server : MonoBehaviour
 {
     public System.Int32 Port;
-    UDPSocket s;
+    private UDPSocket s;
     [SerializeField]
     private QR qr;
     [SerializeField]
@@ -15,7 +15,7 @@ public class Server : MonoBehaviour
     [SerializeField]
     private TrackerInfo trackerInfo;
     // Use this for initialization
-    WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
+    //WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
 
     public System.Int32 getPort()
     {
@@ -56,35 +56,9 @@ public class Server : MonoBehaviour
     {
         qr.endQRShow();
     }
-
-    public static string GetIP()
-    {
-        string output = "";
-
-        foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-        {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            NetworkInterfaceType _type1 = NetworkInterfaceType.Wireless80211;
-            NetworkInterfaceType _type2 = NetworkInterfaceType.Ethernet;
-
-            if ((item.NetworkInterfaceType == _type1 || item.NetworkInterfaceType == _type2) && item.OperationalStatus == OperationalStatus.Up)
-#endif 
-            {
-                foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                {
-                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        output = ip.Address.ToString();
-                    }
-                }
-            }
-        }
-        return output;
-    }
-
     public void CerrarServer()
     {
-        s.StopRunning();
+        s.StopSending();
     }
    
     public void AddListener(InputMovileInterface listener)
