@@ -1,5 +1,0 @@
-Nombre grafica: NVIDIA GeForce GTX 980
-Procesador: Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz Nucleos: 12
-RAM: 32594 MB
-Tiempo en conversion de imagen de la camara: 1 0 2 0 3 8 4 243 5 3985 6 804 7 186 8 300 9 257 10 44 11 10 12 1 13 2 14 0 15 0 16 1 17 0 18 0 19 2 20 0 21 0 22 0 23 0 24 0 25 0 26 0 27 0 28 0 29 0 30 0
-La latencia de red es 1
