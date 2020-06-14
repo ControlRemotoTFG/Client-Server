@@ -14,6 +14,8 @@ namespace KartGame.KartSystems
         private SelectController selectController;
         [SerializeField]
         private Reconnect reconnectOBJ;
+        [SerializeField]
+        private QR qr;
         //Para 2220x1080
         private struct ButtonMobile{
             public ButtonMobile(int x,int y,int alto, int ancho)
@@ -131,6 +133,7 @@ namespace KartGame.KartSystems
 
         public bool ScreenSize(int width, int height)
         {
+            qr.endQRShow();
             pressedJump = false;
             m_Acceleration = 1f;
             widthScreen = width;

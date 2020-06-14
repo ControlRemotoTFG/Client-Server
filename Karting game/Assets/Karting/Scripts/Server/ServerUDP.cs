@@ -28,7 +28,6 @@ namespace Server_CSharp
         bool sending = true;
         bool send = false;
         bool vibrate = false;
-        QR qr;
         IPEndPoint anyIP;
         bool conectado = false;
         byte[] byteImg = new byte[200];
@@ -36,9 +35,8 @@ namespace Server_CSharp
         List<InputMovileInterface> listeners;
         TrackerInfo trackerInfo;
         // init
-        public void init(int port, QR qr, TrackerInfo trackerInfo, int milisecondsForVibration = 500)
+        public void init(int port, TrackerInfo trackerInfo, int milisecondsForVibration = 500)
         {
-            this.qr = qr;
             puerto = port;
             this.trackerInfo = trackerInfo;
             vibrationTime = milisecondsForVibration;
@@ -85,7 +83,6 @@ namespace Server_CSharp
 
             while (!conectado) ;
             cliente.Connect(anyIP.Address, puerto);
-            qr.endQRShow();//end the QR
             byte[] timeToVibrate = new byte[4];
             timeToVibrate[0] = (byte)(vibrationTime & 0x000000FF);
             timeToVibrate[1] = (byte)((vibrationTime >> 4) & 0x000000FF);
