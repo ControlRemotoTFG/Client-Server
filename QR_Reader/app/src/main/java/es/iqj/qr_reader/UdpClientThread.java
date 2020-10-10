@@ -57,7 +57,7 @@ public class UdpClientThread extends Thread{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        byte[] buf = new byte[9];
+        byte[] buf = new byte[8];
         running = true;
         try {
             address = InetAddress.getByName(dstAddress);
@@ -75,14 +75,19 @@ public class UdpClientThread extends Thread{
         buf[6] = (byte)((height & (0x0F00)) >> 8);
         buf[7] = (byte)((height & (0xF000)) >> 16);
 
-        DatagramPacket packet =
+        DatagramPacket packet1 =
                 new DatagramPacket(buf, buf.length, address, dstPort);
 
         try {
-            socket.send(packet);
+            socket.send(packet1);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        buf = new byte[9];
+        DatagramPacket packet =
+                new DatagramPacket(buf, buf.length, address, dstPort);
+
         while(running) {
             if(ready) {
                 try {

@@ -110,6 +110,8 @@ namespace Server_CSharp
                     byte[] vibrateMessage = new byte[4];
                     vibrateMessage[0] = 0;
                     vibrateMessage[1] = 0;
+                    vibrateMessage[2] = 0;
+                    vibrateMessage[3] = 0;
                     vibrate = false;
                     cliente.Send(vibrateMessage, vibrateMessage.Length);
                 }
@@ -132,7 +134,12 @@ namespace Server_CSharp
             client = new UdpClient(puerto);
             IPAddress a = GetAddress();
             anyIP = new IPEndPoint(a, puerto);
-            data = client.Receive(ref anyIP);//recieve screen size
+
+            do
+            {
+                data = client.Receive(ref anyIP);//recieve screen size
+            } while (data.Length != 9); //compruebo que el mensaje es correcto
+
 
             // Get the size for the listener
             int pos0 = data[0];

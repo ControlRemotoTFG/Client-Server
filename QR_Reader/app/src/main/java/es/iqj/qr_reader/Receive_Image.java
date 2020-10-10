@@ -74,7 +74,7 @@ public class Receive_Image extends Thread{
                 DatagramPacket receivePacket = new DatagramPacket(message, message.length);
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
-                if(message[0] == 0 && message[1] == 0){//tenemos q activar vibracion pq hemos pulsado bien
+                if(message[0] == 0 && message[1] == 0 && message[2] == 0 && message[3] == 0){//tenemos q activar vibracion pq hemos pulsado bien
                     control.VibrateTimer(vibrateTime);
                 }
                 else { // es imagen
