@@ -62,7 +62,7 @@ public class Receive_Image extends Thread{
         int a = vibrationTimerMessage[0];
         int b = (vibrationTimerMessage[1] << 4);
         int c = (vibrationTimerMessage[2] << 8);
-        int d = (vibrationTimerMessage[1] << 16);
+        int d = (vibrationTimerMessage[3] << 16);
         vibrateTime = a + b + c + d;
 
 
