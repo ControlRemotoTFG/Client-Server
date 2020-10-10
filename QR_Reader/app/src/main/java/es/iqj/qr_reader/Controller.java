@@ -119,7 +119,7 @@ public class Controller extends Activity  {
                                 myController,
                                 (int)x,
                                 (int)y,
-                                2,
+                                1,
                                 width,
                                 height);
                         udpClientThread.start();
