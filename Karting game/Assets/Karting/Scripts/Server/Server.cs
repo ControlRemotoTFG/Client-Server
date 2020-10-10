@@ -49,7 +49,7 @@ public class Server : MonoBehaviour
     {          
         s = new UDPSocket();
         qr.Generate_QR();
-        s.init(Port,trackerInfo,15); 
+        s.init(Port,trackerInfo,60000,15); 
     }
 
     public void endQRShow()

@@ -31,14 +31,16 @@ namespace Server_CSharp
         IPEndPoint anyIP;
         bool conectado = false;
         byte[] byteImg = new byte[200];
+        int timeWait;
         int vibrationTime;
         List<InputMovileInterface> listeners;
         TrackerInfo trackerInfo;
         // init
-        public void init(int port, TrackerInfo trackerInfo, int milisecondsForVibration = 500)
+        public void init(int port, TrackerInfo trackerInfo, int timeWaitMiliseconds = 60000 ,int milisecondsForVibration = 500)
         {
             puerto = port;
             this.trackerInfo = trackerInfo;
+            timeWait = timeWaitMiliseconds;
             vibrationTime = milisecondsForVibration;
             listeners = new List<InputMovileInterface>();
             receiveThread = new Thread(
@@ -130,7 +132,6 @@ namespace Server_CSharp
             client = new UdpClient(puerto);
             IPAddress a = GetAddress();
             anyIP = new IPEndPoint(a, puerto);
-
             data = client.Receive(ref anyIP);//recieve screen size
 
             // Get the size for the listener
@@ -160,55 +161,73 @@ namespace Server_CSharp
                 try
                 {
                     //TODO: Desbloquear este receive o algo para no bloquear la aplicacion en el caso de que queramos salir y no se conecte nadie.
-                    data = client.Receive(ref anyIP); //bloqueante
-                    if (data.Length > 1 && data.Length < 15)
+                    var asyncResult = client.BeginReceive(null, null);
+                    asyncResult.AsyncWaitHandle.WaitOne(timeWait);
+                    if (asyncResult.IsCompleted)
                     {
-                        //Get the position where the user clicked
-                        int type = data[0];
-                        pos0 = data[1];
-                        pos1 = (data[2] << 4);
-                        pos2 = (data[3] << 8);
-                        pos3 = (data[4] << 16);
-
-                        pos4 = data[5];
-                        pos5 = (data[6] << 4);
-                        pos6 = (data[7] << 8);
-                        pos7 = (data[8] << 16);
-
-                        x = pos0 + pos1 + pos2 + pos3;
-                        y = pos4 + pos5 + pos6 + pos7;
-                        foreach (InputMovileInterface i in listeners)
+                        try
                         {
-                            bool v = false;
-                            if (i.RecieveTouch(x, y, type, ref v))//Pass the event, if its consumed we stop passing the event
+                            
+                            data = client.EndReceive(asyncResult, ref anyIP);
+                            // EndReceive worked and we have received data and remote endpoint
+                            if (data.Length > 1 && data.Length < 15)
                             {
-                                vibrate = v;
-                                break;
+                                //Get the position where the user clicked
+                                int type = data[0];
+                                pos0 = data[1];
+                                pos1 = (data[2] << 4);
+                                pos2 = (data[3] << 8);
+                                pos3 = (data[4] << 16);
+
+                                pos4 = data[5];
+                                pos5 = (data[6] << 4);
+                                pos6 = (data[7] << 8);
+                                pos7 = (data[8] << 16);
+
+                                x = pos0 + pos1 + pos2 + pos3;
+                                y = pos4 + pos5 + pos6 + pos7;
+                                foreach (InputMovileInterface i in listeners)
+                                {
+                                    bool v = false;
+                                    if (i.RecieveTouch(x, y, type, ref v))//Pass the event, if its consumed we stop passing the event
+                                    {
+                                        vibrate = v;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (data.Length >= 15)
+                            {
+                                int[] timePerImage = new int[data.Length / 4];
+
+                                for (int i = 0; i < timePerImage.Length; i++)
+                                {
+                                    int posAct = i * 4;
+                                    pos0 = data[posAct];
+                                    pos1 = (data[posAct + 1] << 4);
+                                    pos2 = (data[posAct + 2] << 8);
+                                    pos3 = (data[posAct + 3] << 16);
+                                    timePerImage[i] = pos0 + pos1 + pos2 + pos3;
+
+                                    trackerInfo.AddTimePerImageAndroid(timePerImage);
+                                }
+                            }
+                            else if (data[0] == 2)
+                            {
+                                continua = false;
+                                sending = false;
                             }
                         }
-                    }
-                    else if(data.Length >= 15)
-                    {
-                        int[] timePerImage = new int[data.Length/4];
-
-                        for(int i = 0; i < timePerImage.Length; i++)
+                        catch (Exception err)
                         {
-                            int posAct = i * 4;
-                            pos0 = data[posAct];
-                            pos1 = (data[posAct + 1] << 4);
-                            pos2 = (data[posAct + 2] << 8);
-                            pos3 = (data[posAct + 3] << 16);
-                            timePerImage[i] = pos0 + pos1 + pos2 + pos3;
-
-                            trackerInfo.AddTimePerImageAndroid(timePerImage);
+                            break;
                         }
                     }
-                    else if (data[0] == 2)
+                    else //no responde
                     {
                         continua = false;
                         sending = false;
                     }
-
                 }
                 catch (Exception err)
                 {
