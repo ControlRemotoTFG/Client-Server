@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Net;
 using System;
 using System.Text;
+
 namespace Server_CSharp
 {
     public interface InputMovileInterface
@@ -32,7 +33,11 @@ namespace Server_CSharp
         bool conectado = false;
         byte[] byteImg = new byte[200];
         int timeWait;
+        int versionProtocolMobile;
         int vibrationTime;
+        bool keepAlive = false;
+        bool alive = true;
+        bool sendVibrationAgain = false;
         List<InputMovileInterface> listeners;
         TrackerInfo trackerInfo;
         // init
@@ -60,7 +65,9 @@ namespace Server_CSharp
 
         public void setTexture2D(ref byte[] arrayImg)
         {
-            byteImg = arrayImg;
+            byteImg[0] = 3;
+            for(int i = 1; i < arrayImg.Length + i; i++)
+                byteImg[i] = arrayImg[i - 1];
             send = true;
         }
         public void StopSending()
@@ -71,6 +78,13 @@ namespace Server_CSharp
         {
             return sending;
         }
+
+        public void ReSendVibration(int vibration)
+        {
+            vibrationTime = vibration;
+            sendVibrationAgain = true;
+        }
+
         public bool conected()
         {
             return conectado;
@@ -85,33 +99,28 @@ namespace Server_CSharp
 
             while (!conectado) ;
             cliente.Connect(anyIP.Address, puerto);
-            byte[] timeToVibrate = new byte[4];
-            timeToVibrate[0] = (byte)(vibrationTime & 0x000000FF);
-            timeToVibrate[1] = (byte)((vibrationTime >> 4) & 0x000000FF);
-            timeToVibrate[2] = (byte)((vibrationTime >> 8) & 0x000000FF);
-            timeToVibrate[3] = (byte)((vibrationTime >> 16) & 0x000000FF);
+            byte[] timeToVibrate = new byte[3];
+            timeToVibrate[0] = 5;
+            timeToVibrate[1] = (byte)(vibrationTime & 0x000000FF);
+            timeToVibrate[2] = (byte)((vibrationTime >> 4) & 0x000000FF);
             cliente.Send(timeToVibrate, timeToVibrate.Length);
-
+            
             //miramos latencia con un ping
             Ping pingSender = new Ping();
             PingReply reply = pingSender.Send(anyIP.Address);
             if (reply.Status == IPStatus.Success)
             {
                 trackerInfo.AddLatencyOfNetwork((int)(reply.RoundtripTime/2));
-                Console.Out.WriteLine("Completed " + reply.RoundtripTime / 2);
             }
             pingSender.Dispose();
-
+            
 
             while (sending)
             {
                 if (vibrate)
                 {
-                    byte[] vibrateMessage = new byte[4];
-                    vibrateMessage[0] = 0;
-                    vibrateMessage[1] = 0;
-                    vibrateMessage[2] = 0;
-                    vibrateMessage[3] = 0;
+                    byte[] vibrateMessage = new byte[1];
+                    vibrateMessage[0] = 2;
                     vibrate = false;
                     cliente.Send(vibrateMessage, vibrateMessage.Length);
                 }
@@ -119,6 +128,21 @@ namespace Server_CSharp
                 {
                     send = false;
                     cliente.Send(byteImg, byteImg.Length); //este mensaje tiene de latencia 5ms aprox cuando hace ping
+                }
+                if (sendVibrationAgain)
+                {
+                    sendVibrationAgain = false;
+                    timeToVibrate[0] = 5;
+                    timeToVibrate[1] = (byte)(vibrationTime & 0x000000FF);
+                    timeToVibrate[2] = (byte)((vibrationTime >> 4) & 0x000000FF);
+                    cliente.Send(timeToVibrate, timeToVibrate.Length);
+                }
+                if(keepAlive){
+                    byte[] keepAliveByte = new byte[1];
+                    keepAliveByte[0] = 6;
+                    keepAlive = false;
+                    alive = false;
+                    cliente.Send(keepAliveByte, keepAliveByte.Length);
                 }
 
             }
@@ -135,31 +159,35 @@ namespace Server_CSharp
             IPAddress a = GetAddress();
             anyIP = new IPEndPoint(a, puerto);
 
+
             do
             {
                 data = client.Receive(ref anyIP);//recieve screen size
-            } while (data.Length != 9); //compruebo que el mensaje es correcto
+            } while (data.Length != 1); //compruebo que el mensaje es correcto
+
+            versionProtocolMobile = data[0];
+
+            do
+            {
+                data = client.Receive(ref anyIP);//recieve screen size
+            } while (data.Length != 4); //compruebo que el mensaje es correcto
 
 
             // Get the size for the listener
             int pos0 = data[0];
             int pos1 = (data[1] << 4);
-            int pos2 = (data[2] << 8);
-            int pos3 = (data[3] << 16);
 
-            int pos4 = data[4];
-            int pos5 = (data[5] << 4);
-            int pos6 = (data[6] << 8);
-            int pos7 = (data[7] << 16);
+            int pos2 = data[2];
+            int pos3 = (data[3] << 4);
 
-            int x = pos0 + pos1 + pos2 + pos3;
-            int y = pos4 + pos5 + pos6 + pos7;
+            int x = pos0 + pos1;
+            int y = pos2 + pos3;
+
             foreach (InputMovileInterface i in listeners)
             {
                 if (i.ScreenSize(x, y))//if the event is consumed we stop passing that event
                     break;
             }
-
 
             conectado = true;//activamos mandar img
             while (continua)
@@ -177,22 +205,19 @@ namespace Server_CSharp
                             
                             data = client.EndReceive(asyncResult, ref anyIP);
                             // EndReceive worked and we have received data and remote endpoint
-                            if (data.Length > 1 && data.Length < 15)
+                            if (data[0] == 0)
                             {
                                 //Get the position where the user clicked
-                                int type = data[0];
-                                pos0 = data[1];
-                                pos1 = (data[2] << 4);
-                                pos2 = (data[3] << 8);
-                                pos3 = (data[4] << 16);
+                                int type = data[1];
+                                pos0 = data[2];
+                                pos1 = (data[3] << 4);
 
-                                pos4 = data[5];
-                                pos5 = (data[6] << 4);
-                                pos6 = (data[7] << 8);
-                                pos7 = (data[8] << 16);
+                                pos2 = data[4];
+                                pos3 = (data[5] << 4);
 
-                                x = pos0 + pos1 + pos2 + pos3;
-                                y = pos4 + pos5 + pos6 + pos7;
+                                x = pos0 + pos1;
+                                y = pos2 + pos3;
+
                                 foreach (InputMovileInterface i in listeners)
                                 {
                                     bool v = false;
@@ -203,13 +228,13 @@ namespace Server_CSharp
                                     }
                                 }
                             }
-                            else if (data.Length >= 15)
+                            else if (data[0] == 1)
                             {
-                                int[] timePerImage = new int[data.Length / 4];
+                                int[] timePerImage = new int[(data.Length-1) / 4];
 
-                                for (int i = 0; i < timePerImage.Length; i++)
+                                for (int i = 1; i < timePerImage.Length + 1; i++)
                                 {
-                                    int posAct = i * 4;
+                                    int posAct = ((i - 1) * 4) + 1;
                                     pos0 = data[posAct];
                                     pos1 = (data[posAct + 1] << 4);
                                     pos2 = (data[posAct + 2] << 8);
@@ -219,10 +244,14 @@ namespace Server_CSharp
                                     trackerInfo.AddTimePerImageAndroid(timePerImage);
                                 }
                             }
-                            else if (data[0] == 2)
+                            if (data[0] == 4)
                             {
                                 continua = false;
                                 sending = false;
+                            }
+                            if (data[0] == 6)
+                            {
+                                alive = true;
                             }
                         }
                         catch (Exception err)
@@ -232,8 +261,13 @@ namespace Server_CSharp
                     }
                     else //no responde
                     {
-                        continua = false;
-                        sending = false;
+                        if(!alive){
+                            continua = false;
+                            sending = false;
+                        }
+                        else{
+                            keepAlive = true;
+                        }
                     }
                 }
                 catch (Exception err)

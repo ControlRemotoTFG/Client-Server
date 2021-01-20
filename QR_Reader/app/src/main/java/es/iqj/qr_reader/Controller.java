@@ -167,7 +167,7 @@ public class Controller extends Activity  {
         v.vibrate(miliseconds);
     }
 
-
+    public void keepAlive(){udpClientThread.keepAlive();}
 
     public static class UdpClientHandler extends Handler {
         public static final int UPDATE_STATE = 0;

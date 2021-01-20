@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/sergi/Desktop/Client-Server/k/KartingGameForTFG.exe
+C:/Users/sergi/Desktop/Client-Server/Exe/KartingGameForTFG.exe
 SceneListBegin?
 Assets/Karting/Scenes/SampleScene.unity
 SceneListEnd?
@@ -67,6 +67,8 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 f542c1afca5bb4022f91fdda19b8d622 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.DepthOfField
 d3c76b14a25eebd3a3323dd43297919c Unity.TextMeshPro.dll:TMPro.TMP_InputField
+71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
+71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 89cbcfa77989979e1843b899c81094a8 Assembly-CSharp.dll:.EmitParticlesOnLand
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
@@ -155,7 +157,7 @@ b8a5e8091ab0b8861d2add371082c5e0 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
 f9a984b76d49201b5c2856d4420d3f29 Assembly-CSharp.dll:.QR
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:KartGame.KartSystems.GamepadInput
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.TemplateEditorDetection
-d26f4da5a1412c80dd473f0554806c02 Assembly-CSharp.dll:KartGame.KartSystems.MobileInput
+5f4814766555a36b2c488420dc9824fe Assembly-CSharp.dll:KartGame.KartSystems.MobileInput
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
 6987e53805e8a29a4a553f91e9a02ba2 Cinemachine.dll:Cinemachine.CinemachineOrbitalTransposer
 7ca765ad7969aae95e8011264b9c4046 Cinemachine.dll:Cinemachine.CinemachineTriggerAction

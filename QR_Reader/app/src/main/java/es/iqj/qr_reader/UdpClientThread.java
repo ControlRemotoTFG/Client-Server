@@ -19,11 +19,13 @@ public class UdpClientThread extends Thread{
 
     DatagramSocket socket;
     InetAddress address;
+    boolean keepAlive = false;
     int xPos;
     int yPos;
     int width;
     int height;
     int typeClick;
+    int versionNumber = 1;
     public UdpClientThread(String addr, int port, Controller control ,int x, int y,int type, int widthScreen, int heightScreen){
         super();
         dstAddress = addr;
@@ -36,6 +38,10 @@ public class UdpClientThread extends Thread{
         typeClick = type;
         controller = control;
 
+    }
+
+    public void keepAlive(){
+        this.keepAlive = true;
     }
 
     public void setRunning(boolean running){
@@ -57,23 +63,35 @@ public class UdpClientThread extends Thread{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        byte[] buf = new byte[8];
+
+        //Mandamos la version del protocolo para que el pc sepa que version tenemos
+        byte[] version = new byte[1];
         running = true;
         try {
             address = InetAddress.getByName(dstAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        version[0] = (byte)(versionNumber & (0x000000FF));
+
+        DatagramPacket packet0 =
+                new DatagramPacket(version, version.length, address, dstPort);
+
+        try {
+            socket.send(packet0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        byte[] buf = new byte[4];
+
         //envio tamaño de la pantalla
         buf[0] = (byte)(width & (0x000000FF));
         buf[1] = (byte)((width & (0x0000FF00)) >> 4);
-        buf[2] = (byte)((width & (0x00FF0000)) >> 8);
-        buf[3] = (byte)((width & (0xFF000000)) >> 16);
 
-        buf[4] = (byte)(height & (0x000F));
-        buf[5] = (byte)((height & (0x00F0)) >> 4);
-        buf[6] = (byte)((height & (0x0F00)) >> 8);
-        buf[7] = (byte)((height & (0xF000)) >> 16);
+        buf[2] = (byte)(height & (0x000000FF));
+        buf[3] = (byte)((height & (0x0000FF00)) >> 4);
 
         DatagramPacket packet1 =
                 new DatagramPacket(buf, buf.length, address, dstPort);
@@ -84,7 +102,7 @@ public class UdpClientThread extends Thread{
             e.printStackTrace();
         }
 
-        buf = new byte[9];
+        buf = new byte[6];
         DatagramPacket packet =
                 new DatagramPacket(buf, buf.length, address, dstPort);
 
@@ -96,16 +114,13 @@ public class UdpClientThread extends Thread{
                     address = InetAddress.getByName(dstAddress);
                     System.out.println(address);
                     // send request
-                    buf[0] = (byte)(typeClick & (0x000F));
-                    buf[1] = (byte)(xPos & (0x000F));
-                    buf[2] = (byte)((xPos & (0x00F0)) >> 4);
-                    buf[3] = (byte)((xPos & (0x0F00)) >> 8);
-                    buf[4] = (byte)((xPos & (0xF000)) >> 16);
+                    buf[0] = 0;//cabecera
+                    buf[1] = (byte)(typeClick & (0x000F));
+                    buf[2] = (byte)(xPos & (0x000000FF));
+                    buf[3] = (byte)((xPos & (0x0000FF00)) >> 4);
 
-                    buf[5] = (byte)(yPos & (0x000F));
-                    buf[6] = (byte)((yPos & (0x00F0)) >> 4);
-                    buf[7] = (byte)((yPos & (0x0F00)) >> 8);
-                    buf[8] = (byte)((yPos & (0xF000)) >> 16);
+                    buf[4] = (byte)(yPos & (0x000000FF));
+                    buf[5] = (byte)((yPos & (0x0000FF00)) >> 4);
 
                     socket.send(packet);
 
@@ -117,17 +132,34 @@ public class UdpClientThread extends Thread{
                     e.printStackTrace();
                 }
             }
+            if(keepAlive) {
+                keepAlive = false;
+                byte[] keepAlive = new byte[1];
+
+                keepAlive[0] = 6;//cabecera
+
+                packet =
+                        new DatagramPacket(keepAlive, keepAlive.length, address, dstPort);
+
+                try {
+                    socket.send(packet);
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+
+            }
         }
 
         int [] timePerImage = controller.getTimePerImage();
-        byte[] bufferImgMessage = new byte[timePerImage.length * 4];
-
-        for(int i = 0; i < timePerImage.length; i++){
-            int pos = i * 4;
-            bufferImgMessage[pos] = (byte)(timePerImage[i] & (0x000F));
-            bufferImgMessage[pos + 1] = (byte)((timePerImage[i] & (0x00F0)) >> 4);
-            bufferImgMessage[pos + 2] = (byte)((timePerImage[i] & (0x0F00)) >> 8);
-            bufferImgMessage[pos + 3] = (byte)((timePerImage[i] & (0xF000)) >> 16);
+        byte[] bufferImgMessage = new byte[timePerImage.length * 4 + 1];
+        bufferImgMessage[0] = 1; //cabecera
+        for(int i = 1; i < timePerImage.length + 1; i++){
+            int pos = ((i - 1) * 4) + 1;
+            bufferImgMessage[pos] = (byte)(timePerImage[i - 1] & (0x000F));
+            bufferImgMessage[pos + 1] = (byte)((timePerImage[i - 1] & (0x00F0)) >> 4);
+            bufferImgMessage[pos + 2] = (byte)((timePerImage[i - 1] & (0x0F00)) >> 8);
+            bufferImgMessage[pos + 3] = (byte)((timePerImage[i - 1] & (0xF000)) >> 16);
         }
         packet =
                 new DatagramPacket(bufferImgMessage, bufferImgMessage.length, address, dstPort);
@@ -142,7 +174,7 @@ public class UdpClientThread extends Thread{
 
         byte[] buff = new byte[1];
 
-        buff[0] = 2;
+        buff[0] = 4;//cabecera
 
         packet =
                 new DatagramPacket(buff, buff.length, address, dstPort);

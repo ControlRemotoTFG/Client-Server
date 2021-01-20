@@ -43,7 +43,6 @@ public class Receive_Image extends Thread{
         int vibrateTime = 0;
         try {
              serversocket = new DatagramSocket(port);
-             System.out.println("Holiwi__" + serversocket.getLocalSocketAddress() + "_____" + serversocket.getLocalPort());
              System.out.println(port);
         }
         catch (IOException e)
@@ -51,7 +50,7 @@ public class Receive_Image extends Thread{
             e.printStackTrace();
         }
         // RECIVIMOS EL TIMEPO DE VIBRACION DESDE EL SERVER DEL PC
-        byte[] vibrationTimerMessage = new byte[4];//entre 1900-1700
+        byte[] vibrationTimerMessage = new byte[3];//entre 1900-1700
         DatagramPacket receiveTime = new DatagramPacket(vibrationTimerMessage, vibrationTimerMessage.length);
         try {
             serversocket.receive(receiveTime);
@@ -59,11 +58,9 @@ public class Receive_Image extends Thread{
             e.printStackTrace();
         }
         // DESCOMPONEMOS EN INT EL TIEMPO DADO POR EL PC Y LO ASIGNAMOS A VIBRATIONTIME
-        int a = vibrationTimerMessage[0];
-        int b = (vibrationTimerMessage[1] << 4);
-        int c = (vibrationTimerMessage[2] << 8);
-        int d = (vibrationTimerMessage[3] << 16);
-        vibrateTime = a + b + c + d;
+        int a = vibrationTimerMessage[1];
+        int b = (vibrationTimerMessage[2] << 4);
+        vibrateTime = a + b;
 
 
         while(running) {
@@ -74,10 +71,17 @@ public class Receive_Image extends Thread{
                 DatagramPacket receivePacket = new DatagramPacket(message, message.length);
                 //recibimos la img del pc
                 serversocket.receive(receivePacket);
-                if(message[0] == 0 && message[1] == 0 && message[2] == 0 && message[3] == 0){//tenemos q activar vibracion pq hemos pulsado bien
+                if(message[0] == 2){//tenemos q activar vibracion pq hemos pulsado bien
                     control.VibrateTimer(vibrateTime);
                 }
-                else { // es imagen
+                else if(message[0] == 5){
+                    a = message[0];
+                    b = (message[1] << 4);
+                    vibrateTime = a + b;
+                }else if(message[0] == 6){
+                    control.keepAlive();
+                }
+                else if(message[0] == 3){ // es imagen
                     //creamos el bitmap desde el byteArray que recibimos
                     long statTime = System.nanoTime();
                     bitmap = BitmapFactory.decodeByteArray(message, 0, message.length);
