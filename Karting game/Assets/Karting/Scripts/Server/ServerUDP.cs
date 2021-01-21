@@ -79,6 +79,10 @@ namespace Server_CSharp
             return sending;
         }
 
+        public void activeVibration(){
+        	vibrate = true;
+        }
+
         public void ReSendVibration(int vibration)
         {
             vibrationTime = vibration;
