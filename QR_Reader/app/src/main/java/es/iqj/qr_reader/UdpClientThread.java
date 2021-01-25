@@ -115,7 +115,7 @@ public class UdpClientThread extends Thread{
                     System.out.println(address);
                     // send request
                     buf[0] = 0;//cabecera
-                    buf[1] = (byte)(typeClick & (0x000F));
+                    buf[1] = (byte)(typeClick & (0x000000FF));
                     buf[2] = (byte)(xPos & (0x000000FF));
                     buf[3] = (byte)((xPos & (0x0000FF00)) >> 4);
 
@@ -152,14 +152,15 @@ public class UdpClientThread extends Thread{
         }
 
         int [] timePerImage = controller.getTimePerImage();
+
         byte[] bufferImgMessage = new byte[timePerImage.length * 4 + 1];
         bufferImgMessage[0] = 1; //cabecera
         for(int i = 1; i < timePerImage.length + 1; i++){
             int pos = ((i - 1) * 4) + 1;
-            bufferImgMessage[pos] = (byte)(timePerImage[i - 1] & (0x000F));
-            bufferImgMessage[pos + 1] = (byte)((timePerImage[i - 1] & (0x00F0)) >> 4);
-            bufferImgMessage[pos + 2] = (byte)((timePerImage[i - 1] & (0x0F00)) >> 8);
-            bufferImgMessage[pos + 3] = (byte)((timePerImage[i - 1] & (0xF000)) >> 16);
+            bufferImgMessage[pos] = (byte)(timePerImage[i - 1] & (0x000000FF));
+            bufferImgMessage[pos + 1] = (byte)((timePerImage[i - 1] & (0x0000FF00)) >> 4);
+            bufferImgMessage[pos + 2] = (byte)((timePerImage[i - 1] & (0x00FF0000)) >> 8);
+            bufferImgMessage[pos + 3] = (byte)((timePerImage[i - 1] & (0xFF000000)) >> 16);
         }
         packet =
                 new DatagramPacket(bufferImgMessage, bufferImgMessage.length, address, dstPort);

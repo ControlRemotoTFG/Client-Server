@@ -132,68 +132,20 @@
     <None Include="Assets\Karting\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\Karting\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\Karting\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
-    <Reference Include="Cinemachine">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProGrids">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.UIWidgets.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.UIWidgets.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Connect.Share.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.Connect.Share.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InteractiveTutorials.Core">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.InteractiveTutorials.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InternalAPIEditorBridgeDev.001">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.InternalAPIEditorBridgeDev.001.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProGrids.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.UIWidgets">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.UIWidgets.dll</HintPath>
+    <Reference Include="Unity.PackageManagerUI.Editor">
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Postprocessing.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.multiplayer-weaver.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InteractiveTutorials.Core.Scripts">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.InteractiveTutorials.Core.Scripts.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.SpatialTracking">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.InteractiveTutorialsFramework">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/UnityEditor.InteractiveTutorialsFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
       <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InternalAPIEngineBridge.024">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.024.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -399,17 +351,8 @@
     <Reference Include="zxing.unity">
       <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Assets/zxing.unity.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem">
-      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/PackageCache/com.unity.connect.share@1.0.9-preview/Plugins/System.IO.Compression.FileSystem.dll</HintPath>
+      <HintPath>C:/Users/sergi/Desktop/Client-Server/Karting game/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.18f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

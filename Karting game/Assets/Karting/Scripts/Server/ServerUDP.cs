@@ -31,7 +31,7 @@ namespace Server_CSharp
         bool vibrate = false;
         IPEndPoint anyIP;
         bool conectado = false;
-        byte[] byteImg = new byte[200];
+        byte[] byteImg = new byte[201];
         int timeWait;
         int versionProtocolMobile;
         int vibrationTime;
@@ -63,11 +63,21 @@ namespace Server_CSharp
             listeners.Add(i);
         }
 
+        public bool getSended()
+        {
+            return send;
+        }
+
         public void setTexture2D(ref byte[] arrayImg)
         {
-            byteImg[0] = 3;
-            for(int i = 1; i < arrayImg.Length + i; i++)
-                byteImg[i] = arrayImg[i - 1];
+            byte[] aux = new byte[arrayImg.Length + 1];
+
+            aux[0] = 3;
+
+            for(int i = 1; i < arrayImg.Length + 1; i++)
+                aux[i] = arrayImg[i - 1];
+
+            byteImg = aux;
             send = true;
         }
         public void StopSending()

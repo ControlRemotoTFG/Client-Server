@@ -84,7 +84,7 @@ public class Receive_Image extends Thread{
                 else if(message[0] == 3){ // es imagen
                     //creamos el bitmap desde el byteArray que recibimos
                     long statTime = System.nanoTime();
-                    bitmap = BitmapFactory.decodeByteArray(message, 0, message.length);
+                    bitmap = BitmapFactory.decodeByteArray(message, 1, message.length - 1);
                     //creamos el bitmapDrawable que luego se pasara a la mainThread
                     //para poder modificar la img que creamos en el manifest
                     final BitmapDrawable bit = new BitmapDrawable(bitmap);
@@ -99,8 +99,6 @@ public class Receive_Image extends Thread{
                     long timeElapsed = endTime - statTime;
                     if((int)(timeElapsed / 1000000) < timePerImage.length && timeElapsed >= 0)
                         timePerImage[(int)(timeElapsed / 1000000)] += 1;
-                    //System.out.println((timeElapsed / 1000000) + " ms time descompressing img");
-                    //TOTAL = 13-15 MS MEDIA
                 }
             } catch (IOException e) {
                 e.printStackTrace();

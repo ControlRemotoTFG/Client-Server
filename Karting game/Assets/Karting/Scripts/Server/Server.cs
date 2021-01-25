@@ -24,7 +24,7 @@ public class Server : MonoBehaviour
 
     void LateUpdate()
     {
-        if (s != null && s.checkSending())
+        if (s != null && s.checkSending() && !s.getSended())
         {
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
