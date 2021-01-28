@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         tokenanterior = token;
                         Log.i("token", token);
 
-                        controllerCreenIntent = new Intent(getApplicationContext(), Controller.class);
+                        controllerCreenIntent = new Intent(getApplicationContext(), ControllerActivity.class);
                         controllerCreenIntent.putExtra("token",token);
                         startActivity(controllerCreenIntent);
                         finish();

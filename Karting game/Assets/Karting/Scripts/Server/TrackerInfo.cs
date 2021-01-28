@@ -16,7 +16,7 @@ public class TrackerInfo : MonoBehaviour
     {
         latency = -1;
         writing = false;
-        timePerConvertImage = new int[31];
+        timePerConvertImage = new int[61];
         for (int i = 0; i < timePerConvertImage.Length; i++)
             timePerConvertImage[i] = 0;
 

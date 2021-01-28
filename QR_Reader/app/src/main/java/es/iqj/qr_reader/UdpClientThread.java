@@ -14,8 +14,8 @@ public class UdpClientThread extends Thread{
     String dstAddress;
     int dstPort;
     private boolean running;
-    Controller.UdpClientHandler handler;
-    Controller controller;
+    ControllerActivity.UdpClientHandler handler;
+    ControllerActivity controller;
 
     DatagramSocket socket;
     InetAddress address;
@@ -26,7 +26,7 @@ public class UdpClientThread extends Thread{
     int height;
     int typeClick;
     int versionNumber = 1;
-    public UdpClientThread(String addr, int port, Controller control ,int x, int y,int type, int widthScreen, int heightScreen){
+    public UdpClientThread(String addr, int port, ControllerActivity control ,int x, int y,int type, int widthScreen, int heightScreen){
         super();
         dstAddress = addr;
         dstPort = port;
@@ -188,6 +188,6 @@ public class UdpClientThread extends Thread{
         }
         System.out.print("Mensaje mandado");
         socket.close();
-        handler.sendEmptyMessage(Controller.UdpClientHandler.UPDATE_END);
+        handler.sendEmptyMessage(ControllerActivity.UdpClientHandler.UPDATE_END);
     }
 }

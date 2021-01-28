@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Controller"
+        <activity android:name=".ControllerActivity"
             android:label="Controller"
             android:screenOrientation="landscape"
             android:theme = "@style/AppTheme"></activity>
